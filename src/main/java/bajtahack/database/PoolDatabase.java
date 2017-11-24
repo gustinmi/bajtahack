@@ -38,7 +38,7 @@ public class PoolDatabase {
         Connection connection = null;
         String out = "";
         try {
-            final String sql = "SELECT COMMENT FROM ENGINES ORDER BY RAND()";
+            final String sql = "SELECT * FROM  bajtatest";
             connection = PoolDatabase.instance.getConnection();
             statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = statement.executeQuery();

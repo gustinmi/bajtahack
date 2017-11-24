@@ -17,6 +17,8 @@ public class HelloMysqlServlet extends HttpServlet  {
              
         try {
             
+            PoolDatabase.instance.get();
+            
             //format response
             response.setContentType("text/plain");
             response.getOutputStream().print("hello from mysql"); 
