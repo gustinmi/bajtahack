@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MOPED web tester</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style type="text/css">
+    html, body {
+        font-family: Arial;
+        font-size: 12px;
+    }
+    body {
+        width: 1200px;
+        margin: 0px auto;
+    }
+    body > div {
+        padding: 5px;
+    }
+    div.test {
+        display: table-row;
+        width: 100%;
+    }
+    div.test > div {
+        vertical-align: top;
+        width: 33.33%;
+        padding: 5px 15px;
+    }
+    div.actions {
+        display: table-cell;
+    }
+    div.actions > * {
+        display: block;
+    }
+    div.actions input[type="text"] {
+        width: 300px;
+    }
+    textarea {
+        height: 170px;
+    }
+
+    textarea.content {
+        height: 170px;
+        width: 240px; 
+    }
+
+    textarea.response {
+        height: 170px;
+        width: 440px; 
+    }
+
+    div.tpl {
+        border: 1px solid gray;
+    }
+    div.tpl div.header {
+        border: 1px solid gray;
+        background-color: gray;
+        font-weight: bold;
+        padding: 10px 5px;
+        letter-spacing: 2px;
+        color: white;
+    }
+    div.request {
+        display: table-cell;
+    }
+    div.response {
+        display: table-cell;
+    }
+    div.spacer1x{
+        height: 12px;
+    }
+    button.btnAction {
+        padding: 5px 45px;
+    }
+    input.txtInput, select.txtInput {
+        padding: 5px;
+    }
+    div.text {
+        padding: 5px 0px;
+    }
+    div#header {
+        display: table-row;
+        border: 1px solid gray;
+    }
+    div#header span {
+        display: table-cell;
+        vertical-align: middle;
+    }
+    span.left {
+        text-align: left;
+        padding-left: 5px;
+    }
+    span.right {
+        text-align: right;
+        padding-right: 5px;
+    }
+    div#top {
+        display: table; 
+        width: 99%;
+    }
+    div#footer {
+        margin-top: 20px;
+    }
+</style>
+<body>
+<div id="top">
+    <div id="header">
+        <span class="left"><h1>MOPED WEB RESTAPI Tester</h1></span>
+        <span class="right"><a target="_blank" href="http://10.136.22.219/docs/okolja.html">Dokumentacija</a></span>
+    </div>
+</div>
+
+<div id="main">
+</div>
+
+<div id="footer">
+&#169; Služba Vlade RS za zakonodajo, Mestni trg 4, 100 Ljubljana, <a href="mailto:rps.svz@gov.si">rps.svz@gov.si</a>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+var tmplMain = ["<div class=\"tpl\">",
+"<div class=\"header\">Operacija <span>__title__<\/span><\/div>",
+"<div class=\"test\" style=\"display: none\">",
+"<div class=\"actions\"> <div class=\"text\">Naslov REST storitve<\/div>",
+"<input value=\"__address__\" class=\"txtInput address\" width=\"300px\" type=\"text\">",
+"<div class=\"spacer1x\"><\/div> <div class=\"text\">Tip REST zahteve<\/div>",
+"<input value=\"__type__\" class=\"txtInput type\" readonly type=\"text\">",
+"<div class=\"spacer1x\"><\/div>",
+"<button class=\"btnAction\" type=\"button\" onclick=\"execXhr(this);\">Izvedi<\/button> <\/div>",
+"<div class=\"request\"> <div class=\"text\">Vsebina zahteve<\/div>",
+"<textarea class=\"content\">__content__<\/textarea> <\/div>",
+"<div class=\"response\"> <div class=\"text\">Koda odgovora: <b><span class=\"code\"><\/span><\/b><\/div>",
+"<textarea class=\"response\"><\/textarea> <\/div> <\/div> <\/div>"]; 
+</script>
+<script type="text/javascript" src="testdata.js"></script>
+
+<script type="text/javascript">
+"use strict";
+var execXhr = function(evt){
+
+    var e = e || window.event;
+    var target = e !== undefined ? e.target || e.srcElement : evt;
+    if (target.nodeType == 3) target = target.parentNode; // defeat Safari bug
+
+    var jqElt = $(target),
+        url = jqElt.parent().find("input.address").val(),
+        reqtype = jqElt.parent().find("input.type").val(),
+        content = jqElt.parent().parent().find("textarea.content"),
+        xhr = new XMLHttpRequest();
+
+        xhr.open(reqtype, url, true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.setRequestHeader('X-moped-partner-id', '5634c3a9707ea079e823067011885f71');
+        xhr.onreadystatechange  = function() {
+            if (xhr.readyState == 4){
+                var responseText = xhr.responseText, status = xhr.status;
+                if (status >= 200 && status < 400){
+                    console.log("Success with code: " + status);
+                    console.log("Response text: " + responseText);
+                } else {
+                    console.log("We reached our target server, but it responded with code: " + status);
+                }
+                jqElt.parent().parent().find("span.code").text(status);
+                var json = JSON.parse(responseText);
+                var str = JSON.stringify(json, undefined, 2);
+
+                jqElt.parent().parent().find("textarea.response").val(str);
+            }
+        };
+
+        xhr.onerror = function() {
+            alert("Server unavailable");
+        };
+
+        xhr.send(content);
+    
+};
+(function(){
+
+    var dataLen = testData["nodes"].length,
+        mainDiv = document.getElementById("main");
+    
+    //render templates
+    for (var i = 0; i < dataLen; i++) {
+
+        (function(){
+            var tmplContent,
+                dataNode = testData["nodes"][i];
+
+            if (dataNode["type"] === "Request"){
+                tmplContent = tmplMain.join("");
+                tmplContent = tmplContent.replace('__title__', dataNode["name"]);
+                tmplContent = tmplContent.replace('__address__', dataNode["uri"]["path"]);
+                tmplContent = tmplContent.replace('__type__', dataNode["method"]["name"]);
+                tmplContent = tmplContent.replace('__content__', dataNode["body"]["textBody"]);
+                mainDiv.insertAdjacentHTML('afterbegin', tmplContent);
+                mainDiv.insertAdjacentHTML('afterbegin', "<br>");
+            }
+
+        })();
+
+    };
+
+    $("div.tpl div.header").click(function(){
+        $(this).parent().find("div.test").toggle(500);
+    });
+
+    $("div.tpl div.test").first().toggle();
+
+})();
+
+</script>
+</body>
+</html>
