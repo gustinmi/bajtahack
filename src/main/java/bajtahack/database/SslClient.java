@@ -2,6 +2,7 @@ package bajtahack.database;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -23,20 +24,18 @@ public class SslClient {
     public static final java.util.logging.Logger logger= LoggingFactory.loggerForThisClass();
 
     private final String certificatePassword;
-    private final String serverURL;
+    
     private KeyStore keyStore;
     private SSLSocketFactory socketFactory;
     
     public static final boolean IS_FILE = true;
     
-    public SslClient(String jksPath, String jksPassword, String serverUrl) throws IllegalStateException, FileNotFoundException {
+    public SslClient(String jksPath, String jksPassword) throws IllegalStateException, FileNotFoundException {
  
-		logger.info(String.format("Initializing SSL client %s %s %s", jksPath,
-				jksPassword, serverUrl
-		));
+		logger.info(String.format("Initializing SSL client %s", jksPath));
     	
        this.certificatePassword = jksPassword;
-       this.serverURL = serverUrl;
+       
        logger.info("Keystore path is: " + jksPath);
        keyStore = createKeyStore(jksPath);
        socketFactory = createSocketFactory();
@@ -46,18 +45,62 @@ public class SslClient {
        SSLUtilities.trustAllHttpsCertificates();
   
     }
+    
+    public String payload(String url, String contentType, String payload, String method){
+        final StringBuilder outputString = new StringBuilder();
+        
+        final HttpURLConnection connection = getConnection(url);
+        if (connection==null){
+            logger.severe("Nadaljevanje ni mogoče. Povezave z " + url + " ni mogoče vzpostaviti!");
+            throw new IllegalStateException("Cannot continue with no connection");
+        } 
+        
+        final byte[] buffer = payload.getBytes();
+        // Set the appropriate HTTP parameters.
+        connection.setRequestProperty("Content-Length", String.valueOf(buffer.length));
+        connection.setRequestProperty("Content-Type", "Content-Type: " + contentType);
+        try {
+            connection.setRequestMethod(method);
+        } catch (ProtocolException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+
+        try(OutputStream out = connection.getOutputStream()){
+            out.write(buffer);
+        }catch(IOException ioEx) {
+            logger.log(Level.SEVERE, ioEx.getMessage(), ioEx);
+        }
+
+        //Write the SOAP message response to a String.
+        
+        try(final InputStreamReader isr = new InputStreamReader(connection.getInputStream());
+            final BufferedReader in = new BufferedReader(isr)){;
+            String responseString;
+            while ((responseString = in.readLine()) != null) {
+                outputString.append(responseString);
+            }
+                
+            return outputString.toString();
+        }catch(IOException ioEx) {
+            logger.log(Level.SEVERE, ioEx.getMessage(), ioEx);
+        }
+        return null;
+        
+    }
+    
+    
 
     /**
      * Create a http get request to sodna praksa api
      * The base url is "https://www.sodnapraksa.si/api2/mainSearch/?apiKey=d5f0bfee8b3d"
      * @param url "&connection2=EZ+23a&page=0&itemsPerPage=20"
      */
-    public String makeRequest(String url)  {
-        final String urlStr = serverURL + url;
+    public String get(String urlStr)  {
         logger.info("server je:" + urlStr);
         HttpURLConnection connection = getConnection(urlStr);
         connection.disconnect();
-        //System.out.println(urlStr);
           
         try {
             connection.setRequestMethod("GET");
