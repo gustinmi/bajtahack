@@ -50,10 +50,23 @@ public class OrangePiTester {
     @Test
     public void getTemperaturaNaL2(){
     	String makeRequest = client.payload("https://l2.srm.bajtahack.si:52200/phy/i2c/1/slaves/64/value", "text/plain", "\"00\"", "PUT");
-    	makeRequest = client.payload("https://l2.srm.bajtahack.si:52200/phy/i2c/1/slaves/64/value", "text/plain", null, "GET");
-    	
-    	System.out.println(makeRequest);
-    	
+    	makeRequest = client.get("https://l2.srm.bajtahack.si:52200/phy/i2c/1/slaves/64/value");
+    	makeRequest = makeRequest.substring(1, makeRequest.length() - 1);
+    	Integer temp = Integer.parseInt(makeRequest, 16);
+    	float tempR = (((float)temp / 65535) * 165) - 40;
+ 
+    	System.out.println(tempR);
+    }
+    
+    @Test
+    public void getVlagaNaL2(){
+    	String makeRequest = client.payload("https://l2.srm.bajtahack.si:52200/phy/i2c/1/slaves/64/value", "text/plain", "\"01\"", "PUT");
+    	makeRequest = client.get("https://l2.srm.bajtahack.si:52200/phy/i2c/1/slaves/64/value");
+    	makeRequest = makeRequest.substring(1, makeRequest.length() - 1);
+    	Integer temp = Integer.parseInt(makeRequest, 16);
+    	float tempR = (((float)temp / 65535) * 100);
+ 
+    	System.out.println(tempR);
     }
 
     @Test
