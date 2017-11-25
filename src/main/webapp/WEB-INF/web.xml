@@ -4,7 +4,7 @@
     <display-name>MOPED REST API Service - Local</display-name>
         
     <welcome-file-list>
-        <welcome-file>apitest.html</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
 	<session-config>
