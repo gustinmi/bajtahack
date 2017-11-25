@@ -13,14 +13,13 @@ public class OrangePiTester {
     @Before
     public void setUp() throws Exception {
         try {
-            this.client = new SslClient("c:\\cygwin\\home\\HP\\work\\bajtahackgit\\src\\main\\resources\\bajtahack.jks", "p");
+            this.client = new SslClient("C:\\bajtahack\\src\\test\\resources\\bajtahack.jks", "p");
         } catch (IllegalStateException | FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
     
-    @Test
+    /*@Test
     public void testPut() {
         
         //this.client = new SslClient("/bajtahack.jks", "p", "https://l1.srm.bajtahack.si:52100");
@@ -28,12 +27,33 @@ public class OrangePiTester {
         //final String makeRequest = client.payload("https://l1.srm.bajtahack.si:52100/phy/gpio/alloc", "text/plain", "17", "POST"); 
         
         
-        final String makeRequest = client.payload("https://l2.srm.bajtahack.si:52200/phy/gpio/27/value", "text/plain", "0", "PUT");
+        final String makeRequest = client.payload("https://l2.srm.bajtahack.si:52200/phy/gpio/27/value", "text/plain", "1", "PUT");
         
         System.out.println(makeRequest);
+
+    }*/
+    
+    //@Test
+    public void testDiodaNaL3() {
+        
+        //this.client = new SslClient("/bajtahack.jks", "p", "https://l1.srm.bajtahack.si:52100");
+            
+        //final String makeRequest = client.payload("https://l1.srm.bajtahack.si:52100/phy/gpio/alloc", "text/plain", "17", "POST"); 
         
         
+        final String makeRequest = client.payload("https://l3.srm.bajtahack.si:52300/phy/gpio/6/value", "text/plain", "1", "PUT");
         
+        System.out.println(makeRequest);
+
+    }
+    
+    @Test
+    public void getTemperaturaNaL2(){
+    	String makeRequest = client.payload("https://l2.srm.bajtahack.si:52200/phy/i2c/1/slaves/64/value", "text/plain", "\"00\"", "PUT");
+    	makeRequest = client.payload("https://l2.srm.bajtahack.si:52200/phy/i2c/1/slaves/64/value", "text/plain", null, "GET");
+    	
+    	System.out.println(makeRequest);
+    	
     }
 
     @Test

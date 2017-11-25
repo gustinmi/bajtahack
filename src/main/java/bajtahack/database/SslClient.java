@@ -32,14 +32,14 @@ public class SslClient {
     
     public SslClient(String jksPath, String jksPassword) throws IllegalStateException, FileNotFoundException {
  
-		logger.info(String.format("Initializing SSL client %s", jksPath));
+		//logger.info(String.format("Initializing SSL client %s", jksPath));
     	
        this.certificatePassword = jksPassword;
        
-       logger.info("Keystore path is: " + jksPath);
+       //logger.info("Keystore path is: " + jksPath);
        keyStore = createKeyStore(jksPath);
        socketFactory = createSocketFactory();
-       logger.info("Keystore je:" + keyStore);
+       //logger.info("Keystore je:" + keyStore);
        
        SSLUtilities.trustAllHostnames();
        SSLUtilities.trustAllHttpsCertificates();
@@ -208,7 +208,7 @@ public class SslClient {
         	
             final HttpURLConnection connection = (HttpURLConnection) openConnection;
             if (connection instanceof HttpsURLConnection) {
-                logger.info("SEtting SSL properties called");
+                //logger.info("SEtting SSL properties called");
                 final HttpsURLConnection c = (HttpsURLConnection) connection;
                 c.setSSLSocketFactory(socketFactory);
                 c.setDefaultUseCaches(false);
