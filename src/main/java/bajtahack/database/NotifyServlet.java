@@ -27,13 +27,25 @@ public class NotifyServlet extends HttpServlet  {
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException, ServletException {
         logger.info("Klican notify");
         
+        final String deviceId = request.getParameter("device");
+        final String serviceId = request.getParameter("service");
+        final String type = request.getParameter("type");
+        
+        if (deviceId == null || serviceId == null || type == null) {
+            logger.severe("Unknown device or service ");
+            return;
+        }
+        
+        logger.info("Request from device:" + deviceId + " service: " + serviceId + ",type: " + type);
+        
         final BufferedReader reader = request.getReader();
         String line = null;
         final StringBuilder rslt = new StringBuilder();
         while ((line = reader.readLine()) != null) {
             rslt.append(line);
         }
-        logger.info(rslt.toString());
+        
+        logger.info("Payload : " + rslt.toString());
         
     }
     
