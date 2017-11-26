@@ -10,14 +10,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import bajtahack.database.DeviceRegistry.Device;
 
 @WebServlet("/status")
 public class DeviceStatusServlet extends HttpServlet  {
     
     private static final long serialVersionUID = 1L;
     public static final java.util.logging.Logger logger = LoggingFactory.loggerForThisClass();
-   
     
     
     @Override
@@ -84,10 +82,22 @@ public class DeviceStatusServlet extends HttpServlet  {
         
         for (Iterator iterator = entrySet2.iterator(); iterator.hasNext();) {
             Entry<String, Device> entry = (Entry<String, Device>) iterator.next();
-            final Device user = entry.getValue();
-            sb.append(String.format("{ \"id\":\"%s\", \"last\": \"%s\" }", user.getIp(), user.getLastModified()));
-            if (iterator.hasNext())
-                sb.append(",");
+            final Device d = entry.getValue();
+            sb.append(String.format("{ \"id\":\"%s\", \"last\": \"%s\"", d.getIp(), d.getLastModified()));
+            
+            final Set<DeviceState> state = d.getState();
+            if (!state.isEmpty()) {
+                sb.append(",\"state\": [");
+                for (Iterator iterator2 = state.iterator(); iterator2.hasNext();) {
+                    DeviceState deviceState = (DeviceState) iterator2.next();
+                    sb.append(deviceState.toJsonString());
+                    if (iterator2.hasNext()) sb.append(",");
+                }
+                sb.append("]");
+            }
+            sb.append("}");
+            
+            if (iterator.hasNext()) sb.append(",");
         }
         
         sb.append("]");

@@ -9,10 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import bajtahack.database.DeviceRegistry.Device;
 
 @WebServlet("/install")
-public class HelloMysqlServlet extends HttpServlet  {
+public class InstallServlet extends HttpServlet  {
     
     private static final long serialVersionUID = 1L;
     public static final java.util.logging.Logger logger = LoggingFactory.loggerForThisClass();

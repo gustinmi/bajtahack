@@ -85,9 +85,9 @@
     <div class="floor floor1 l1">
 
         <div class="rooms">
-            <div data-id="1" class="room">room1</div>
-            <div data-id="2" class="room">room2</div>
-            <div data-id="3" class="room">room3</div>
+            <div class="room room1">room1</div>
+            <div class="room room2">room2</div>
+            <div class="room room3">room3</div>
         </div>
         
         <div class="hodnik"> ----------------------------- >> FLOOR 1 smer obhoda </div>
@@ -95,9 +95,9 @@
     <div class="floor floor2 l2" style="display: none;">
 
         <div class="rooms">
-            <div data-id="1" class="room">room1</div>
-            <div data-id="2" class="room">room2</div>
-            <div data-id="3" class="room">room3</div>
+            <div class="room room1">room1</div>
+            <div class="room room2">room2</div>
+            <div class="room room3">room3</div>
         </div>
         
         <div class="hodnik"> ----------------------------- >> FLOOR 2 smer obhoda </div>
@@ -105,9 +105,9 @@
     <div class="floor floor3 l3" style="display: none;">
 
         <div class="rooms">
-            <div data-id="1" class="room">room1</div>
-            <div data-id="2" class="room">room2</div>
-            <div data-id="3" class="room">room3</div>
+            <div class="room room1">room1</div>
+            <div class="room room2">room2</div>
+            <div class="room room3">room3</div>
         </div>
         
         <div class="hodnik"> ----------------------------- >>  FLOOR 3 smer obhoda </div>
@@ -128,6 +128,7 @@ $(function(){
         for(i=0; i < data.length; i++){
             deviceData = data[i];
             $('span', '.switch.' + deviceData.id.substring(0,2)).text('active');
+            window.app.renderState(deviceData.id.substring(0,2), deviceData.state);
         }
     });
 

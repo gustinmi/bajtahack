@@ -12,44 +12,34 @@ public class DeviceRegistry {
     
     public final Map<String, Device> DEVICE_MAP = new ConcurrentHashMap<String, Device>();
     
-    public static class Device {
-        
-        private final String ip;
-        private Date lastModified;
-
-        public Device(String ip, Date lastModified) {
-            super();
-            this.ip = ip;
-            this.lastModified = lastModified;
+    
+    public Device getDevice(String id) {
+        synchronized (this) {
+            if (DEVICE_MAP.containsKey(id.toLowerCase())) {
+                final Device device = DEVICE_MAP.get(id.toLowerCase());
+                return device;
+            }
+            return null;
         }
-
-        public String getIp() {
-            return this.ip;
-        }
-
-        public Date getLastModified() {
-            return this.lastModified;
-        }
-
-        public void setLastModified(Date lastModified) {
-            this.lastModified = lastModified;
-        }
-        
     }
     
     public void addDevice(Device d) {
         synchronized (this) {
             if (DEVICE_MAP.containsKey(d.ip)) {
                 
-                final Device device = DEVICE_MAP.get(d.ip);
+                final Device device = DEVICE_MAP.get(d.id);
                 device.setLastModified(new Date());
                 
-                logger.info("Device already exists " + d.ip);
+                logger.info("Device already exists " + d.id);
                 return;
             }
             
-            logger.info("Added device " + d.getIp());
-            DEVICE_MAP.put(d.ip, d);
+            // add dummy service for debugging purposes
+            final DeviceState dummy = new DeviceState("dummy", "1", "0");
+            d.addState(dummy);
+            
+            logger.info("Added device " + d.getId());
+            DEVICE_MAP.put(d.id, d);
         }
     }
     
