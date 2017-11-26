@@ -71,6 +71,7 @@ public class SslClient {
             out.write(buffer);
         }catch(IOException ioEx) {
             logger.log(Level.SEVERE, ioEx.getMessage(), ioEx);
+            return "";
         }
 
         //Write the SOAP message response to a String.

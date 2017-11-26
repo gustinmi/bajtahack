@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import bajtahack.easysql.BajtaDatasource;
 import bajtahack.easysql.Database;
+import bajtahack.services.gpio;
 
 @WebListener
 public class AppInit implements HttpSessionListener, ServletContextListener {
@@ -27,6 +28,9 @@ public class AppInit implements HttpSessionListener, ServletContextListener {
         
         try {
             httpClient = new SslClient("/bajtahack.jks", "p");
+            
+            gpio.instance.configure(httpClient);
+            
         } catch (IllegalStateException | FileNotFoundException e) {
             e.printStackTrace();
         }

@@ -31,14 +31,14 @@ public class InstallServlet extends HttpServlet  {
         try {
             
             final Date date = new Date();
-            logger.info(dateFormat.format(date)); //2016/11/16 12:08:43
+            //logger.info(dateFormat.format(date)); //2016/11/16 12:08:43
             
             final String ip = request.getParameter("name");
             final Device d = new Device(ip, date);
             
             DeviceRegistry.instance.addDevice(d);
             
-            logger.info("Api called for device " + d.getIp());
+            //logger.info("Api called for device " + d.getIp());
             
             //response.setContentType("text/plain");
             //response.getOutputStream().print("hello from " + ip); 

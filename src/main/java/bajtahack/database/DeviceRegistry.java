@@ -25,21 +25,17 @@ public class DeviceRegistry {
     
     public void addDevice(Device d) {
         synchronized (this) {
-            if (DEVICE_MAP.containsKey(d.ip)) {
+            if (DEVICE_MAP.containsKey(d.id.toLowerCase())) {
                 
-                final Device device = DEVICE_MAP.get(d.id);
+                final Device device = DEVICE_MAP.get(d.id.toLowerCase());
                 device.setLastModified(new Date());
                 
-                logger.info("Device already exists " + d.id);
+                // logger.info("Device already exists " + d.id);
                 return;
             }
             
-            // add dummy service for debugging purposes
-            final DeviceState dummy = new DeviceState("dummy", "1", "0");
-            d.addState(dummy);
-            
-            logger.info("Added device " + d.getId());
-            DEVICE_MAP.put(d.id, d);
+            logger.info("Added device " + d.getId().toLowerCase());
+            DEVICE_MAP.put(d.id.toLowerCase(), d);
         }
     }
     

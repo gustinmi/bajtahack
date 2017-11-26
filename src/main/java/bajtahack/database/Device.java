@@ -17,7 +17,11 @@ public class Device {
         MOTION,
         LIGHT,
         BUTTON,
-        WATER
+        WATER;
+        
+        public static DeviceType fromString(String name) {
+            return DeviceType.valueOf(name);
+        }
     }
     
     public static final java.util.logging.Logger logger = LoggingFactory.loggerForThisClass();

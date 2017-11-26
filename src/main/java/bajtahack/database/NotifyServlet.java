@@ -21,7 +21,6 @@ public class NotifyServlet extends HttpServlet  {
     
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException, ServletException {
-        logger.info("Klican notify");
         
         final String deviceId = request.getParameter("device");
         final String serviceId = request.getParameter("service");
@@ -32,7 +31,7 @@ public class NotifyServlet extends HttpServlet  {
             return;
         }
         
-        logger.info("Request from device:" + deviceId + " service: " + serviceId + ",type: " + type);
+        logger.info("Notify received from device:" + deviceId + " service: " + serviceId + ", type: " + type);
         
         final BufferedReader reader = request.getReader();
         String line = null;

@@ -8,13 +8,13 @@ App.prototype = {
          var output;
          //debugger;
          if (jsonDef.type === "TEMPERATURE") {
-             output = '<div><button data-device="' + jsonDef.device + '" data-service="' + jsonDef.service + '">TEMP</button><span></span></div>';
+             output = '<div class="stateData" data-type="' +  jsonDef.type +'"><button data-device="' + jsonDef.device + '" data-service="' + jsonDef.service + '">TEMP</button><span></span></div>';
          } else if (jsonDef.type === "HUMIDTY") {
-             output = '<div><button data-device="' + jsonDef.device + '" data-service="' + jsonDef.service + '">HUMIDITY</button><span></span></div>';
+             output = '<div class="stateData" data-type="' +  jsonDef.type +'"><button data-device="' + jsonDef.device + '" data-service="' + jsonDef.service + '">HUMIDITY</button><span></span></div>';
          } else if (jsonDef.type === "BUTTON") {
-             output = '<div><button data-device="' + jsonDef.device + '" data-service="' + jsonDef.service + '">BUTTON</button><span></span></div>';
+             output = '<div class="stateData" data-type="' +  jsonDef.type +'"><button data-device="' + jsonDef.device + '" data-service="' + jsonDef.service + '">BUTTON</button><span></span></div>';
          } else if (jsonDef.type === "MOTION") {
-             output = '<div class="stateData">';
+             output = '<div class="stateData" data-type="' + jsonDef.type + '">';
              output += '<input type="hidden" value="' + jsonDef.service + '"">';
              output += '<span>GIBANJE</span>';
              if (jsonState){
@@ -27,7 +27,7 @@ App.prototype = {
              }
              output += "</div>";
          } else if (jsonDef.type === "WATER") {
-             output = '<div class="stateData">';
+             output = '<div class="stateData" data-type="' + jsonDef.type +'">';
              output += '<input type="hidden" value="' + jsonDef.service + '"">';
              output += '<span>VODA</span>';
 
@@ -43,17 +43,21 @@ App.prototype = {
 
              output += "</div>";
          } else if (jsonDef.type === "LIGHT") {
-             output = '<div class="stateData">';
-             output += '<input type="hidden" value="' + jsonDef.service + '"">';
+             output = '<div class="stateData" data-type="' + jsonDef.type +'">';
+             output += '<input type="hidden" value="' + jsonDef.service + '">';
              if (jsonState){
                  if (jsonState.value === "0") {
                      output += '<span>NE GORI</span>';
+                     output += '<button style="background-color:grey; color: white;">LIGHT</button>';
                  }
                  else {
                      output += '<span>GORI</span>';
+                     output += '<button style="background-color:green; color: white;">LIGHT</button>';
                  }
+             }else{
+                 output +=  '<span>LUČ</span>';
              }
-             output += '<button>LIGHT</button>';
+             
              output += "</div>";
          } else {
              output = "<div>&nbsp;</div>";
@@ -69,13 +73,17 @@ App.prototype = {
         var that = this,
             jqFloor = $(".main .floor." + deviceId),
             buffAll = [],
-            stateLookupTable = {};
+            stateLookupTable = {},
+            jqRoot;
 
-        $.each(jsonState, function(idx1, eltState){
+        if($.isArray(jsonState)){
 
-            stateLookupTable[eltState.service] = eltState;
+            $.each(jsonState, function(idx1, eltState){
 
-        });
+                stateLookupTable[eltState.service] = eltState;
+
+            });
+        }    
 
         //debugger;
         $.each(jsonDef, function(idx, elt){
@@ -88,10 +96,39 @@ App.prototype = {
 
         });
 
-        $('.room1', jqFloor).html(buffAll.join(""));
+        jqRoot = $('.room1', jqFloor).html(buffAll.join(""));
+        this.bindEvents(jqRoot);
+    },
+
+    bindEvents : function(jqRoot){
+
+        var that = this;
+
+       $('.stateData', jqRoot).on('click', function(){
+
+            var ctx = $(this),
+                type = $(this).data('type'),
+                pin = $('input[type=hidden]', ctx).val(),
+                valueStr = $('span', ctx).text(),
+                parentFloor = ctx.parent().parent().parent(), //parentsUntil('.floor'),
+                deviceId = parentFloor.data('deviceid');
+
+            that.pushState(deviceId, pin, type, that.formateValue(type, valueStr));  
+
+
+       });
 
     },
 
+    formateValue : function(type, value){
+        if (type==="LIGHT"){
+            if (value === "NE GORI"){
+                return "1";
+            }else{
+                return "0";
+            }
+        }
+    },
 
     getState : function(url, cb){
 
@@ -99,6 +136,28 @@ App.prototype = {
             "dataType": "json",
             "type": 'POST',
             "url": window.serverUrl + url,
+            "success": function(resp) {
+                 console.log(resp);   
+                 cb && cb(resp);
+            }
+        });
+
+    },
+
+    pushState : function(device, service, type, value){
+
+        var objArr = {
+            "device" : device,
+            "service" : service,
+            "type" : type,
+            "value" : value
+        };
+
+        $.ajax({
+            "dataType": "json",
+            "type": 'POST',
+            "data" : JSON.stringify(objArr),
+            "url": window.serverUrl + "execute",
             "success": function(resp) {
                  console.log(resp);   
                  cb && cb(resp);

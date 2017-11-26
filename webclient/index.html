@@ -34,7 +34,7 @@
     }
 
     .rooms {
-        text-align: center;
+        text-align: left;
         padding-top: 5px;
         display: table-row;
     }
@@ -71,9 +71,17 @@
         font-weight: bold;
     }
 
+    .stateData {
+        padding: 10px 5px;
+    }
+
     .stateData span {
         display: inline-block;
         padding: 2px;
+    }
+
+    .stateData:hover {
+        background-color: #8bc34a;
     }
     
 
@@ -94,7 +102,7 @@
 </div>
 
 <div class="main">
-    <div class="floor floor1 l1">
+    <div class="floor floor1 l1" data-deviceid="l1">
 
         <div class="rooms">
             <div class="room room1">room1</div>
@@ -103,7 +111,7 @@
         </div>
        
     </div>
-    <div class="floor floor2 l2" style="display: none;">
+    <div class="floor floor2 l2" data-deviceid="l2" style="display: none;">
 
         <div class="rooms">
             <div class="room room1">room1</div>
@@ -112,7 +120,7 @@
         </div>
        
     </div>
-    <div class="floor floor3 l3" style="display: none;">
+    <div class="floor floor3 l3" data-deviceid="l3" style="display: none;">
 
         <div class="rooms">
             <div class="room room1">room1</div>
@@ -135,6 +143,9 @@ $(function(){
     window.refresh = function(){
 
         window.app.getState('status', function(data){
+
+            //console.log(JSON.stringify(data));
+
             //debugger;
             var i, deviceData;
             for(i=0; i < data.length; i++){
