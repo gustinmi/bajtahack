@@ -24,7 +24,7 @@ public class BayesClassifier {
 		List<String> sentenceAsList = Arrays.asList(sentence.getValue().split("\\s"));
 		String result = "";
 		result = Global.bayesClassifier.classify(sentenceAsList).getCategory();
-		
+		//to je to
 		return result;
 	}
 	
