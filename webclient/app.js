@@ -5,10 +5,10 @@ function App(){}
 App.prototype = {
 
     renderDeviceState: function izpisi(json) {
-        var output = "<div>ok</div>"; 
+        var output = "<div>&nbsp;</div>"; 
         if (json.type === "gib") {
-            output = "<div>";
-            output += "<hiden>" + json.service + "</hiden>";
+            output = '<div class="stateData">';
+            output += '<input type="hidden" value="' + json.service + '"">';
 
             output += '<span>GIBANJE</span>';
             if (json.value === "0") {
@@ -20,8 +20,8 @@ App.prototype = {
             output += "</div>";
         }
         if (json.type === "voda") {
-            output = "<div>";
-            output += "<hiden>" + json.service + "</hiden>";
+            output = '<div class="stateData">';
+            output += '<input type="hidden" value="' + json.service + '"">';
             output += '<span>VODA</span>';
             if (json.value === "0") {
                 output += '<span>NE</span>';
@@ -32,10 +32,8 @@ App.prototype = {
             output += "</div>";
         }
         if (json.type === "luc") {
-            output = "<div>";
-            output += "<hiden>" + json.service + "</hiden>";
-
-
+            output = '<div class="stateData">';
+            output += '<input type="hidden" value="' + json.service + '"">';
             if (json.value === "0") {
                 output += '<span>NE GORI</span>';
 
@@ -48,9 +46,8 @@ App.prototype = {
             output += "</div>";
         }
         if (json.type === "temperature") {
-            output = "<div>";
-            output += "<hiden>" + json.service + "</hiden>";
-
+            output = '<div class="stateData">';
+            output += '<input type="hidden" value="' + json.service + '"">';
             output += '<span>TEMPERATURA</span>';
             output += '<button>Posodobi temperaturo</button>';
             output += "</div>";

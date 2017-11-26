@@ -28,7 +28,7 @@ public class SslClient {
     private KeyStore keyStore;
     private SSLSocketFactory socketFactory;
     
-    public static final boolean IS_FILE = true;
+    public static final boolean IS_FILE = false;
     
     public SslClient(String jksPath, String jksPassword) throws IllegalStateException, FileNotFoundException {
  

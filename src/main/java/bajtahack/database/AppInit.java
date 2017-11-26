@@ -1,6 +1,7 @@
 package bajtahack.database;
 
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,10 +18,18 @@ public class AppInit implements HttpSessionListener, ServletContextListener {
     
     public static final Logger log = LoggingFactory.loggerForThisClass();
     
+    public static SslClient httpClient = null;
+    
     @Override
     public void contextInitialized(ServletContextEvent ctx) {
         
         Database.instance.setConnectionFactory(new BajtaDatasource("java:jboss/datasources/bajtahack"));
+        
+        try {
+            httpClient = new SslClient("/bajtahack.jks", "p");
+        } catch (IllegalStateException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
             
     }
     

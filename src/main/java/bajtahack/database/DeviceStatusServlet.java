@@ -51,7 +51,7 @@ public class DeviceStatusServlet extends HttpServlet  {
             for (Entry<String, Device> userEntry : entrySet2) {
                 final Device user = userEntry.getValue();
                 table.append("<tr>");
-                table.append("<td>" + user.getIp() + "</td>");
+                table.append("<td>" + user.getId() + "</td>");
                 table.append("<td>" + user.getLastModified() + "</td>"); // 2
                 table.append("</tr>");
             }
@@ -83,7 +83,7 @@ public class DeviceStatusServlet extends HttpServlet  {
         for (Iterator iterator = entrySet2.iterator(); iterator.hasNext();) {
             Entry<String, Device> entry = (Entry<String, Device>) iterator.next();
             final Device d = entry.getValue();
-            sb.append(String.format("{ \"id\":\"%s\", \"last\": \"%s\"", d.getIp(), d.getLastModified()));
+            sb.append(String.format("{ \"id\":\"%s\", \"last\": \"%s\"", d.getId(), d.getLastModified()));
             
             final Set<DeviceState> state = d.getState();
             if (!state.isEmpty()) {
@@ -95,6 +95,9 @@ public class DeviceStatusServlet extends HttpServlet  {
                 }
                 sb.append("]");
             }
+            
+            sb.append(", \"devTypes\": " + d.getSuportedDevices());
+            
             sb.append("}");
             
             if (iterator.hasNext()) sb.append(",");

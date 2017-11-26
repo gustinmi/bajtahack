@@ -44,6 +44,7 @@ public class NotifyServlet extends HttpServlet  {
         logger.info("Payload : " + rslt.toString());
         
         final DeviceState st = DeviceState.fromNotify(serviceId, type, rslt.toString());
+        st.setDevice(deviceId);
         
         Device device = DeviceRegistry.instance.getDevice(deviceId);
         if (device != null)
