@@ -4,66 +4,88 @@ function App(){}
 
 App.prototype = {
 
-    renderDeviceState: function izpisi(json) {
-        var output = "<div>&nbsp;</div>"; 
-        if (json.type === "gib") {
-            output = '<div class="stateData">';
-            output += '<input type="hidden" value="' + json.service + '"">';
+    renderDeviceState: function izpisi(jsonDef, jsonState) { // izpis enega service / naprave
+         var output;
+         //debugger;
+         if (jsonDef.type === "TEMPERATURE") {
+             output = '<div><button data-device="' + jsonDef.device + '" data-service="' + jsonDef.service + '">TEMP</button><span></span></div>';
+         } else if (jsonDef.type === "HUMIDTY") {
+             output = '<div><button data-device="' + jsonDef.device + '" data-service="' + jsonDef.service + '">HUMIDITY</button><span></span></div>';
+         } else if (jsonDef.type === "BUTTON") {
+             output = '<div><button data-device="' + jsonDef.device + '" data-service="' + jsonDef.service + '">BUTTON</button><span></span></div>';
+         } else if (jsonDef.type === "MOTION") {
+             output = '<div class="stateData">';
+             output += '<input type="hidden" value="' + jsonDef.service + '"">';
+             output += '<span>GIBANJE</span>';
+             if (jsonState){
+                if (jsonState.value === "0") {
+                     output += '<span>NE</span>';
+                }
+                else {
+                     output += '<span>DA</span>';
+                }
+             }
+             output += "</div>";
+         } else if (jsonDef.type === "WATER") {
+             output = '<div class="stateData">';
+             output += '<input type="hidden" value="' + jsonDef.service + '"">';
+             output += '<span>VODA</span>';
 
-            output += '<span>GIBANJE</span>';
-            if (json.value === "0") {
-                output += '<span>NE</span>';
-            }
-            if (json.value === "1") {
-                output += '<span>DA</span>';
-            }
-            output += "</div>";
-        }
-        if (json.type === "voda") {
-            output = '<div class="stateData">';
-            output += '<input type="hidden" value="' + json.service + '"">';
-            output += '<span>VODA</span>';
-            if (json.value === "0") {
-                output += '<span>NE</span>';
-            }
-            if (json.value === "1") {
-                output += '<span>DA</span>';
-            }
-            output += "</div>";
-        }
-        if (json.type === "luc") {
-            output = '<div class="stateData">';
-            output += '<input type="hidden" value="' + json.service + '"">';
-            if (json.value === "0") {
-                output += '<span>NE GORI</span>';
+             if (jsonState){
 
-            }
-            if (json.value === "1") {
-                output += '<span>GORI</span>';
+                 if (jsonState.value === "0") {
+                     output += '<span>DA</span>';
+                 }
+                 else {
+                     output += '<span>NE</span>';
+                 }
+             }
 
-            }
-            output += '<button>Toggle</button>';
-            output += "</div>";
-        }
-        if (json.type === "temperature") {
-            output = '<div class="stateData">';
-            output += '<input type="hidden" value="' + json.service + '"">';
-            output += '<span>TEMPERATURA</span>';
-            output += '<button>Posodobi temperaturo</button>';
-            output += "</div>";
-        }
-        return output;
+             output += "</div>";
+         } else if (jsonDef.type === "LIGHT") {
+             output = '<div class="stateData">';
+             output += '<input type="hidden" value="' + jsonDef.service + '"">';
+             if (jsonState){
+                 if (jsonState.value === "0") {
+                     output += '<span>NE GORI</span>';
+                 }
+                 else {
+                     output += '<span>GORI</span>';
+                 }
+             }
+             output += '<button>LIGHT</button>';
+             output += "</div>";
+         } else {
+             output = "<div>&nbsp;</div>";
+         }
+         return output;
     },
 
 
-    renderState: function(deviceId, state){
+
+
+    renderState: function(deviceId, jsonDef, jsonState){ // gre cez vse service
         // debugger;
         var that = this,
             jqFloor = $(".main .floor." + deviceId),
-            buffAll = [];
+            buffAll = [],
+            stateLookupTable = {};
 
-        $.each(state, function(idx, elt){
-            buffAll.push(that.renderDeviceState(elt));
+        $.each(jsonState, function(idx1, eltState){
+
+            stateLookupTable[eltState.service] = eltState;
+
+        });
+
+        //debugger;
+        $.each(jsonDef, function(idx, elt){
+
+            if (stateLookupTable[elt.service]){
+                buffAll.push(that.renderDeviceState(elt, stateLookupTable[elt.service]));    
+            }else{
+                buffAll.push(that.renderDeviceState(elt));
+            }
+
         });
 
         $('.room1', jqFloor).html(buffAll.join(""));

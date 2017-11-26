@@ -41,7 +41,7 @@
 
     .room {
         display: table-cell;
-        height: 50vh;
+        height: 80vh;
         border: 1px solid white;
         width: 30%;
     }
@@ -101,11 +101,7 @@
             <div class="room room2">room2</div>
             <div class="room room3">room3</div>
         </div>
-        
-        <div style="display: table-row;">
-            <div class="hodnik">FLOOR 1 smer obhoda >> </div>    
-        </div>
-
+       
     </div>
     <div class="floor floor2 l2" style="display: none;">
 
@@ -114,11 +110,7 @@
             <div class="room room2">room2</div>
             <div class="room room3">room3</div>
         </div>
-        
-        <div style="display: table-row;">
-            <div class="hodnik">FLOOR 1 smer obhoda >> </div>    
-        </div>
-
+       
     </div>
     <div class="floor floor3 l3" style="display: none;">
 
@@ -127,11 +119,7 @@
             <div class="room room2">room2</div>
             <div class="room room3">room3</div>
         </div>
-        
-        <div style="display: table-row;">
-            <div class="hodnik">FLOOR 1 smer obhoda >> </div>    
-        </div>
-
+       
     </div>
 </div>
 
@@ -144,16 +132,20 @@ $(function(){
     console.log("Aplikacija zagnana");
     window.serverUrl = 'http://192.168.1.8:8080/bajtahack/';
 
-    window.app.getState('status', function(data){
-        var i, deviceData;
-        for(i=0; i < data.length; i++){
-            deviceData = data[i];
-            $('span', '.switch.' + deviceData.id.substring(0,2)).text('active');
-            window.app.renderState(deviceData.id.substring(0,2), deviceData.state);
+    window.refresh = function(){
 
-            $("#id1").html("dskfdwkfj")
-        }
-    });
+        window.app.getState('status', function(data){
+            //debugger;
+            var i, deviceData;
+            for(i=0; i < data.length; i++){
+                deviceData = data[i];
+                $('span', '.switch.' + deviceData.id.substring(0,2)).text('active');
+                window.app.renderState(deviceData.id.substring(0,2), deviceData.devTypes, deviceData.state);
+
+            }
+        });
+
+    };
 
     var jqFloorSwitch = $(".floor-switch");
 
@@ -164,12 +156,10 @@ $(function(){
         $("." + floorId).show();
     });
 
-    $(".statusShow", jqFloorSwitch).on('click', function(){
-        
-
-
-    });
-
+    window.refresh();
+    setInterval(function(){
+        window.refresh();
+    },10000);
 
 
 });

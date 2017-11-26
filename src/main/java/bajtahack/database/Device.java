@@ -3,6 +3,7 @@ package bajtahack.database;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import bajtahack.easysql.Database;
 import bajtahack.easysql.SqlQueryParam;
@@ -25,7 +26,7 @@ public class Device {
     final String ip;
     private Date lastModified;
     
-    final EnumSet<DeviceType> suportedDevices;
+    private Map<String, DeviceType> suportedDevices = new HashMap<String, DeviceType>();
     
     private Set<DeviceState> state = new HashSet<DeviceState>();
     
@@ -36,18 +37,33 @@ public class Device {
         this.lastModified = lastModified;
         
         if (this.id.equalsIgnoreCase("l1")) {
-            suportedDevices = EnumSet.of(DeviceType.LIGHT, DeviceType.BUTTON);
-            // lucke 4
-            // gumbe
+            suportedDevices.put("26", DeviceType.BUTTON);
+            suportedDevices.put("27", DeviceType.BUTTON);
+            suportedDevices.put("17", DeviceType.BUTTON);
+            suportedDevices.put("16", DeviceType.BUTTON);
+            suportedDevices.put("2", DeviceType.LIGHT);
+            suportedDevices.put("25", DeviceType.LIGHT);
+            suportedDevices.put("18", DeviceType.LIGHT);
+            suportedDevices.put("23", DeviceType.LIGHT);
         }
         else if (this.id.equalsIgnoreCase("l2")) {
-            suportedDevices = EnumSet.of(DeviceType.LIGHT, DeviceType.BUTTON, DeviceType.TEMPERATURE, DeviceType.MOTION, DeviceType.HUMIDTY);
+            suportedDevices.put("26", DeviceType.LIGHT);
+            suportedDevices.put("27", DeviceType.LIGHT);
+            suportedDevices.put("24", DeviceType.BUTTON);
+            suportedDevices.put("25", DeviceType.BUTTON);
+            suportedDevices.put("16", DeviceType.BUTTON);
+            suportedDevices.put("23", DeviceType.MOTION);
+            suportedDevices.put("64", DeviceType.TEMPERATURE);   
+            suportedDevices.put("64", DeviceType.HUMIDTY);   
         }
         else if (this.id.equalsIgnoreCase("l3")) {
-            suportedDevices = EnumSet.of(DeviceType.LIGHT, DeviceType.WATER);
+            suportedDevices.put("5", DeviceType.LIGHT);
+            suportedDevices.put("6", DeviceType.LIGHT);
+            suportedDevices.put("2", DeviceType.LIGHT);
+            suportedDevices.put("24", DeviceType.BUTTON);
+            suportedDevices.put("26", DeviceType.WATER);
         }else {
             logger.warning("No default config for device: " + this.id);
-            suportedDevices = EnumSet.noneOf(DeviceType.class);
         }
     }
     
@@ -62,15 +78,20 @@ public class Device {
 
     public String getSuportedDevices() {
         final StringBuilder sb = new StringBuilder("[");
-        for (Iterator iterator = suportedDevices.iterator(); iterator.hasNext();) {
-            DeviceType deviceState = (DeviceType) iterator.next();
-            sb.append(" \"" + deviceState.name() + "\"");
-            if (iterator.hasNext())
-                sb.append(",");
+        
+        Set<Entry<String,DeviceType>> entrySet = suportedDevices.entrySet();
+        Iterator<Entry<String, DeviceType>> iterator = entrySet.iterator();
+        for (Iterator iterator2 = entrySet.iterator(); iterator2.hasNext();) {
+            Entry<String, DeviceType> entry = (Entry<String, DeviceType>) iterator2.next();
+            sb.append("{ \"service\":\"" + entry.getKey() + "\", \"type\":\"" + entry.getValue().name() + "\"}");
+            if (iterator2.hasNext())
+              sb.append(",");
             
         }
+
         sb.append("]");
         return sb.toString();
+
     }
 
     public Date getLastModified() {
