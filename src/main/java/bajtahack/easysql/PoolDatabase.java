@@ -32,7 +32,7 @@ public class PoolDatabase {
         }
     }
 
-    public String get() {
+    public String get123() {
         ResultSet rs = null;
         PreparedStatement statement = null;
         Connection connection = null;

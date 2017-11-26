@@ -4,21 +4,72 @@ function App(){}
 
 App.prototype = {
 
-    renderDeviceState : function(dState){
+    renderDeviceState: function izpisi(json) {
+        var output = "<div>ok</div>"; 
+        if (json.type === "gib") {
+            output = "<div>";
+            output += "<hiden>" + json.service + "</hiden>";
 
-        var gpio = state.service;
-        var type = state.type; 
-        var value = state.value;
+            output += '<span>GIBANJE</span>';
+            if (json.value === "0") {
+                output += '<span>NE</span>';
+            }
+            if (json.value === "1") {
+                output += '<span>DA</span>';
+            }
+            output += "</div>";
+        }
+        if (json.type === "voda") {
+            output = "<div>";
+            output += "<hiden>" + json.service + "</hiden>";
+            output += '<span>VODA</span>';
+            if (json.value === "0") {
+                output += '<span>NE</span>';
+            }
+            if (json.value === "1") {
+                output += '<span>DA</span>';
+            }
+            output += "</div>";
+        }
+        if (json.type === "luc") {
+            output = "<div>";
+            output += "<hiden>" + json.service + "</hiden>";
 
-        var jqState = $('<div><span class="type"></span></div>');
 
-        { "service":"23", "type":"gib", "value":"0"}
+            if (json.value === "0") {
+                output += '<span>NE GORI</span>';
+
+            }
+            if (json.value === "1") {
+                output += '<span>GORI</span>';
+
+            }
+            output += '<button>Toggle</button>';
+            output += "</div>";
+        }
+        if (json.type === "temperature") {
+            output = "<div>";
+            output += "<hiden>" + json.service + "</hiden>";
+
+            output += '<span>TEMPERATURA</span>';
+            output += '<button>Posodobi temperaturo</button>';
+            output += "</div>";
+        }
+        return output;
     },
 
+
     renderState: function(deviceId, state){
-        debugger;
-        var jqFloor = $(".main .floor." + deviceId);
-        $('.room1', jqFloor).text(state);
+        // debugger;
+        var that = this,
+            jqFloor = $(".main .floor." + deviceId),
+            buffAll = [];
+
+        $.each(state, function(idx, elt){
+            buffAll.push(that.renderDeviceState(elt));
+        });
+
+        $('.room1', jqFloor).html(buffAll.join(""));
 
     },
 

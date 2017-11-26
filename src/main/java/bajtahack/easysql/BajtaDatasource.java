@@ -32,7 +32,7 @@ public class BajtaDatasource implements ConnectionFactory {
 			
 			if (dataSource == null) {
 			    log.severe("UnitTestDatasource z imenom ne obstaja :" + this.dsName);
-			    throw new ExceptionInInitializerError("UnitTestDatasource ne obstaja");
+			    throw new ExceptionInInitializerError("Datasource ne obstaja");
 			}
 			
 		} catch (NamingException e) {

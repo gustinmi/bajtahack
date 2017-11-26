@@ -3,7 +3,6 @@ package bajtahack.easysql;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
@@ -22,7 +21,6 @@ import static bajtahack.json.DatabaseJson.*;
  * 
  * Contains background worker thread for asynchronous background queries. You dump a query into queue list
  * and workers picks it later on and processes it. 
- * Vsaka napaka pri tem objektu se zalogira in rezultira v errorju za klicoÄŤe.
  * 
  * @author mitjag
  *
@@ -33,10 +31,12 @@ public class Database {
     public static final boolean VERBOSE_TRACE = false;
 	
     public static final Logger log = LoggingFactory.loggerForThisClass();
+    
+    public static final Database instance = new Database();
 	
 	private ConnectionFactory impl;
 
-	public Database(final ConnectionFactory connProvider) {
+	public void setConnectionFactory(final ConnectionFactory connProvider) {
 		impl = connProvider;
 	}
 	
