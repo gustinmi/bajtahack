@@ -1,4 +1,4 @@
-package bajtahack.database;
+package bajtahack.easysql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -2,15 +2,11 @@ package bajtahack.database;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import bajtahack.database.DeviceRegistry.Device;
 
 @WebServlet("/notify")
 public class NotifyServlet extends HttpServlet  {
@@ -46,6 +42,12 @@ public class NotifyServlet extends HttpServlet  {
         }
         
         logger.info("Payload : " + rslt.toString());
+        
+        final DeviceState st = DeviceState.fromNotify(serviceId, type, rslt.toString());
+        
+        Device device = DeviceRegistry.instance.getDevice(deviceId);
+        if (device != null)
+            device.addState(st);
         
     }
     

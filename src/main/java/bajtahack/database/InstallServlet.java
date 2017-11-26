@@ -9,10 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import bajtahack.database.DeviceRegistry.Device;
 
 @WebServlet("/install")
-public class HelloMysqlServlet extends HttpServlet  {
+public class InstallServlet extends HttpServlet  {
     
     private static final long serialVersionUID = 1L;
     public static final java.util.logging.Logger logger = LoggingFactory.loggerForThisClass();
@@ -57,24 +56,17 @@ public class HelloMysqlServlet extends HttpServlet  {
     
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException, ServletException {
-        String ip = request.getParameter("ip");
-        
-        logger.info(ip);
-        
-        response.setContentType("text/plain");
-        response.getOutputStream().print("hello from " + ip); 
-        response.getOutputStream().flush();
-        
+        this.doGet(request, response);        
     }
     
     @Override
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        throw new ServletException("Method not suported");
+        this.doGet(request, response);       
     }
     
     @Override
     public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        throw new ServletException("Method not suported");
+        this.doGet(request, response);       
     }
     
 

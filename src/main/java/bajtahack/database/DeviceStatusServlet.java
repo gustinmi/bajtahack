@@ -1,6 +1,7 @@
 package bajtahack.database;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -9,16 +10,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import bajtahack.database.DeviceRegistry.Device;
 
 @WebServlet("/status")
 public class DeviceStatusServlet extends HttpServlet  {
     
     private static final long serialVersionUID = 1L;
     public static final java.util.logging.Logger logger = LoggingFactory.loggerForThisClass();
-   
+    
+    
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { // for debugging
         
         final String template = "<!DOCTYPE html>\r\n" + 
                 "<html>\r\n" + 
@@ -73,8 +74,37 @@ public class DeviceStatusServlet extends HttpServlet  {
     
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException, ServletException {
-       doGet(request, response);
         
+        final StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        final Map<String, Device> userSessionMap = DeviceRegistry.instance.DEVICE_MAP;
+        final Set<Entry<String, Device>> entrySet2 = userSessionMap.entrySet();
+        
+        for (Iterator iterator = entrySet2.iterator(); iterator.hasNext();) {
+            Entry<String, Device> entry = (Entry<String, Device>) iterator.next();
+            final Device d = entry.getValue();
+            sb.append(String.format("{ \"id\":\"%s\", \"last\": \"%s\"", d.getIp(), d.getLastModified()));
+            
+            final Set<DeviceState> state = d.getState();
+            if (!state.isEmpty()) {
+                sb.append(",\"state\": [");
+                for (Iterator iterator2 = state.iterator(); iterator2.hasNext();) {
+                    DeviceState deviceState = (DeviceState) iterator2.next();
+                    sb.append(deviceState.toJsonString());
+                    if (iterator2.hasNext()) sb.append(",");
+                }
+                sb.append("]");
+            }
+            sb.append("}");
+            
+            if (iterator.hasNext()) sb.append(",");
+        }
+        
+        sb.append("]");
+        response.setContentType("application/json");
+        response.getOutputStream().print(sb.toString()); 
+        response.getOutputStream().flush();
+        return;
     }
     
     @Override
