@@ -27,8 +27,6 @@ public class SpeechRecognition {
 		String fResult = "";
 		
 		try{
-			//GoogleCredential credential = GoogleCredential.getApplicationDefault();
-			
 			SpeechClient speech = SpeechClient.create();
 	
 			// Builds the sync recognize request
@@ -76,6 +74,7 @@ public class SpeechRecognition {
 		return fResult;
 	}
 	
+	@Deprecated
 	public static String Recognize(byte[] data){
 		
 		try{
