@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import bajtahack.content.Global;
+import bajtahack.common.Global;
 import de.daslaboratorium.machinelearning.classifier.Classifier;
 
 public class BayesClassifier {

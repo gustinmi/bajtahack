@@ -66,14 +66,14 @@
             <version>6.0.6</version>
         </dependency>
         <dependency>
-		  <groupId>com.google.cloud</groupId>
-		  <artifactId>google-cloud</artifactId>
-		  <version>0.30.0-alpha</version>
-		</dependency>
-		<dependency>
 		  <groupId>com.github.ptnplanet</groupId>
 		  <artifactId>Java-Naive-Bayes-Classifier</artifactId>
 		  <version>1.0.7</version>
+		</dependency>
+		<dependency>
+		  <groupId>com.google.cloud</groupId>
+		  <artifactId>google-cloud</artifactId>
+		  <version>0.30.0-alpha</version>
 		</dependency>
     </dependencies>
 
@@ -83,9 +83,9 @@
             <url>https://code.lds.org/nexus/content/groups/main-repo</url>
         </repository>
         <repository>
-	    	<id>jitpack.io</id>
-	    	<url>https://jitpack.io</url>
-	  	</repository>
+    		<id>jitpack.io</id>
+    		<url>https://jitpack.io</url>
+  		</repository>
     </repositories>
 
 
