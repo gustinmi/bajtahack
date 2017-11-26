@@ -55,7 +55,7 @@ public class SpeechTester {
 			SpeechClient speech = SpeechClient.create();
 	
 			Map<String, String> fileNames = new HashMap<String, String>();
-			fileNames.put("---", "test.flac");
+			fileNames.put("---", "konj2.flac");
 			
 			/*fileNames.put("110", "F1L1OFF.flac");
 			fileNames.put("111", "F1L1ON.flac");
