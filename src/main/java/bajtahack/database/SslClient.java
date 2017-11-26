@@ -104,7 +104,7 @@ public class SslClient {
           
         try {
             connection.setRequestMethod("GET");
-            logger.info("connecting ... ");
+            //logger.info("connecting ... ");
             connection.setDefaultUseCaches(false);
             connection.setUseCaches(false);
             connection.setRequestProperty("Pragma", "no-cache");
@@ -112,7 +112,7 @@ public class SslClient {
             connection.setRequestProperty("Expires", "-1");
             connection.setRequestProperty("max-age", "0");
             connection.connect();
-            logger.info("connected ");
+            //logger.info("connected ");
             String encoding = connection.getContentEncoding();
             if (null == encoding) encoding = "UTF-8";
             Charset charset = Charset.forName(encoding);
