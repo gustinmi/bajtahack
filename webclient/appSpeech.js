@@ -13,8 +13,6 @@ recorderApp.controller('RecorderController', [ '$scope' , function($scope) {
 	$scope.samplerates = [ 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000 ];
 	$scope.compression = 0;
 	$scope.compressions = [ 0/*, 1,2,3,4,5,6,7,8*/];
-	// $scope.bitrate = 16;
-	// $scope.bitrates = [ 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160, 192, 224, 256, 320 ];
 	$scope.recordButtonStyle = "red-btn";
     $scope.flacdata = {};
     $scope.flacdata.bps = 16;
@@ -29,7 +27,7 @@ recorderApp.controller('RecorderController', [ '$scope' , function($scope) {
     		text: ""
     };
     
-    $scope._google_api_key = 'AIzaSyDzpZi9rAMLif-rRiMs3fVlnG2_Eyu3JBA';
+    $scope._google_api_key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
     $scope._asr_alternatives = 20;
     $scope.result_mode = 'asr';
     
@@ -220,64 +218,7 @@ recorderApp.controller('RecorderController', [ '$scope' , function($scope) {
 	  	// Listen to the upload progress.
 	  	xhr.upload.onprogress = function(e) { console.log("uploading..."); };
 	  	//xhr.setRequestHeader("Content-Type", "audio/x-flac; rate=" + sample_rate + ";");
-	  	xhr.send(blob);
-
-
-		//alert("dsa");
-
-		/*function ajaxSuccess () {
-			var result = this.responseText;
-            console.log("AJAXSubmit - Success!");//DEBUG
-            console.log(result);
-//            //note: you can get the serialized data through the "submittedData" custom property:
-//            console.log(JSON.stringify(this.submittedData));//DEBUG
-            
-            //QUICK-FIX: currently, several results are sent within one response, separated by a NEWLINE
-            //			-> convert into an array
-            if(/\r?\n/igm.test(result)){
-            	
-            	//convert NEWLINEs to commas:
-            	result = '[' + result.replace(/\r?\n/igm, ',');
-
-            	//remove "pending" comma, if present:
-            	result = result.replace(/,\s*$/igm, '');
-            	
-            	//close array:
-            	result += ']';
-			}
-            
-            try{
-            	result = JSON.parse(result);
-            	//format the result
-            	result = JSON.stringify(result, null, 2);
-            } catch (exc){
-            	console.warn('Could not parse result into JSON object: "'+result+'"');
-            }
-            
-            $scope.$apply(function(){
-            		$scope.asr_result.text = result;
-            });
-        }
-
-        var data = blob;
-        var sample_rate = 	$scope.samplerate;
-        var key = 			$scope._google_api_key;
-        var alternatives = 	$scope._asr_alternatives;
-        
-        var oAjaxReq = new XMLHttpRequest();
-        
-        oAjaxReq.onload = ajaxSuccess;
-        oAjaxReq.open("post", "https://www.google.com/speech-api/v2/recognize?client=chromium&lang=de-DE&maxAlternatives="+alternatives+"&output=json&key="+key, true);
-        oAjaxReq.setRequestHeader("Content-Type", "audio/x-flac; rate=" + sample_rate + ";");
-        oAjaxReq.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost');
-//        oAjaxReq.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36;");
-		oAjaxReq.withCredentials = true;
-        oAjaxReq.send(data);
-        
-        $scope.$apply(function(){
-    		$scope.asr_result.text = "Waiting for Recognition Result...";
-        });
-       */ 
+	  	xhr.send(blob); 
 	};
 
 }]);
