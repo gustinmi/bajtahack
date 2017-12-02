@@ -1,4 +1,4 @@
-package bajtahack.database;
+package bajtahack.main;
 
 import java.util.logging.Logger;
 
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * </pre>
  * 
  * 
- * @author mitjag
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  *
  */
 public class LoggingFactory {

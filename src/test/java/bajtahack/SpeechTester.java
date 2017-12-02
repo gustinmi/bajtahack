@@ -5,26 +5,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import bajtahack.speech.BayesClassifier;
-
-import com.google.cloud.speech.v1.RecognitionAudio;
-import com.google.cloud.speech.v1.RecognitionConfig;
-import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
-import com.google.cloud.speech.v1.RecognizeResponse;
-import com.google.cloud.speech.v1.SpeechClient;
-import com.google.cloud.speech.v1.SpeechRecognitionAlternative;
-import com.google.cloud.speech.v1.SpeechRecognitionResult;
-import com.google.protobuf.ByteString;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.cloud.speech.v1.*;
+import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
+import com.google.protobuf.ByteString;
 
+/**
+ * @author <a href="mailto:joze.baligac@gmail.com">Jože Baligač</a>
+ *
+ */
 public class SpeechTester {
 
 	@Test
@@ -72,7 +63,7 @@ public class SpeechTester {
 			    	//lahko je več alternativ, vzamemo prvo
 				    SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
 				    System.out.printf("trainSet.add(new String[] {\"%s\", \"%s\"});%n", fileName[0], alternative.getTranscript());
-				    //System.out.println(BayesClassifier.Classify(fileName));
+				    //System.out.println(BayesClassifierBajta.Classify(fileName));
 				    break;
 				}
 			    

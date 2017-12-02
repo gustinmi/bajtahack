@@ -4,7 +4,8 @@ package bajtahack.easysql;
  * Holder for prepared statement parameter. You must specify type and value.
  * Later on, database code iterates through collection of this parameters and inserts them into
  * statement's sql.
- * @author mitjag
+ * 
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  *
  */
 public class SqlQueryParam {

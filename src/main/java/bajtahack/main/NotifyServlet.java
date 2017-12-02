@@ -1,4 +1,4 @@
-package bajtahack.database;
+package bajtahack.main;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,6 +8,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
+ *
+ */
 @WebServlet("/notify")
 public class NotifyServlet extends HttpServlet  {
     

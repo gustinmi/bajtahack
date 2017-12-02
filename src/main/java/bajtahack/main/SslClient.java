@@ -1,4 +1,4 @@
-package bajtahack.database;
+package bajtahack.main;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -11,12 +11,11 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import javax.net.ssl.*;
-import bajtahack.database.SslClient.SSLUtilities;
 
 /**
  * POJO Ssl client surpasses java restrictions due to host name and CA not trusted. 
  * It load's our own trustore (or keystore)
- * @author HP
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  *
  */
 public class SslClient {
@@ -91,12 +90,8 @@ public class SslClient {
         
     }
     
-    
-
     /**
-     * Create a http get request to sodna praksa api
-     * The base url is "https://www.sodnapraksa.si/api2/mainSearch/?apiKey=d5f0bfee8b3d"
-     * @param url "&connection2=EZ+23a&page=0&itemsPerPage=20"
+     * Create a http get request 
      */
     public String get(String urlStr)  {
         logger.info("server je:" + urlStr);

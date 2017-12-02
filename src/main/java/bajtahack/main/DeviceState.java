@@ -1,5 +1,9 @@
-package bajtahack.database;
+package bajtahack.main;
 
+/**
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
+ *
+ */
 public class DeviceState {
     
     private String service; // 23

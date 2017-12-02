@@ -3,21 +3,16 @@ package bajtahack.speech;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.cloud.speech.v1.RecognitionAudio;
-import com.google.cloud.speech.v1.RecognitionConfig;
-import com.google.cloud.speech.v1.RecognizeResponse;
-import com.google.cloud.speech.v1.SpeechClient;
-import com.google.cloud.speech.v1.SpeechRecognitionAlternative;
-import com.google.cloud.speech.v1.SpeechRecognitionResult;
+import java.util.logging.Logger;
+import bajtahack.main.LoggingFactory;
+import com.google.cloud.speech.v1.*;
 import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
 import com.google.protobuf.ByteString;
 
 public class SpeechRecognition {
+    
+    public static final Logger log = LoggingFactory.loggerForThisClass();
 	
 	public SpeechRecognition(){
 		
@@ -60,7 +55,7 @@ public class SpeechRecognition {
 			    
 			    System.out.printf("Google speech recognition: \"%s\"%n", alternative.getTranscript());
 			    
-			    //System.out.println(BayesClassifier.Classify(fileName));
+			    //System.out.println(BayesClassifierBajta.Classify(fileName));
 			    break;
 			}
 			    

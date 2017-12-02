@@ -6,18 +6,19 @@ import java.nio.CharBuffer;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-import bajtahack.database.LoggingFactory;
 import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONStringer;
+import bajtahack.main.LoggingFactory;
 
+/**
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
+ *
+ */
 public final class JsonUtils {
 	
 	public static final String JSON_STR_QUOTES = "\"";

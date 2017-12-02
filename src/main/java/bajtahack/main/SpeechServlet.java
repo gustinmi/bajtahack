@@ -1,31 +1,20 @@
-package bajtahack.database;
+package bajtahack.main;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
+import java.io.*;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.NotImplementedException;
-
-import bajtahack.services.gpio;
 import bajtahack.services.gpio2;
-import bajtahack.speech.BayesClassifier;
+import bajtahack.speech.BayesClassifierBajta;
 import bajtahack.speech.SpeechRecognition;
 
+/**
+ * @author <a href="mailto:joze.baligac@gmail.com">Jože Baligač</a>
+ *
+ */
 @WebServlet("/speechcommand")
 //@MultipartConfig(fileSizeThreshold=1024*1024*10,    // 10 MB
 //maxFileSize=1024*1024*50,          // 50 MB
@@ -74,7 +63,7 @@ public class SpeechServlet extends HttpServlet {
 	
 	    	String result = SpeechRecognition.Recognize2(temp.getAbsolutePath());
 	    	
-	    	result = BayesClassifier.Classify(result.split("\\s"));
+	    	result = BayesClassifierBajta.classify(result.split("\\s"));
 	    	
 	    	gpio2 lucka = new gpio2("https://l3.srm.bajtahack.si:52300", AppInit.httpClient);
 	    	

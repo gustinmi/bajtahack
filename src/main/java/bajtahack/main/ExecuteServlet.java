@@ -1,6 +1,5 @@
-package bajtahack.database;
+package bajtahack.main;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Map;
 import javax.servlet.ServletException;
@@ -8,11 +7,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import bajtahack.database.Device.DeviceType;
 import bajtahack.json.JsonUtils;
+import bajtahack.main.Device.DeviceType;
 import bajtahack.services.gpio;
 
 
+/**
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
+ *
+ */
 @WebServlet("/execute")
 public class ExecuteServlet extends HttpServlet  {
     

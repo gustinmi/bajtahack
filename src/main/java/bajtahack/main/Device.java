@@ -1,4 +1,4 @@
-package bajtahack.database;
+package bajtahack.main;
 
 import java.sql.SQLException;
 import java.sql.Types;
@@ -9,6 +9,10 @@ import bajtahack.easysql.Database;
 import bajtahack.easysql.SqlQueryParam;
 import bajtahack.easysql.StatementWithParams;
 
+/**
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
+ *
+ */
 public class Device {
     
     public static enum DeviceType {

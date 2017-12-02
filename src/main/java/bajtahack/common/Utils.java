@@ -3,8 +3,12 @@ package bajtahack.common;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import bajtahack.database.LoggingFactory;
+import bajtahack.main.LoggingFactory;
 
+/**
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
+ *
+ */
 public final class Utils {
     
     public static final Logger log = LoggingFactory.loggerForThisClass();
@@ -106,30 +110,6 @@ public final class Utils {
             if (os!=null) try { os.close(); } catch(IOException e) {}
             if (is!=null) try { is.close(); } catch(IOException e) {}
         }
-    }
-    
-    // Simple data structures
-    
-    public static class SimpleTuple<X, Y> { 
-        public final X x; 
-        public final Y y; 
-        public SimpleTuple(X x, Y y) { 
-          this.x = x; 
-          this.y = y; 
-        } 
-    } 
-    
-    public static class SimpleTriple<X, Y, Z> { 
-        public final X x; 
-        public final Y y; 
-        public final Z z;
-        public SimpleTriple(X x, Y y, Z z) {
-            super();
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-         
     }
     
 }

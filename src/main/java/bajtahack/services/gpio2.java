@@ -1,7 +1,11 @@
 package bajtahack.services;
 
-import bajtahack.database.SslClient;
+import bajtahack.main.SslClient;
 
+/**
+ * @author <a href="mailto:joze.baligac@gmail.com">Jože Baligač</a>
+ *
+ */
 public class gpio2 {
 	String root;
 	SslClient client;

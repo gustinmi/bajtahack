@@ -8,9 +8,13 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import bajtahack.database.LoggingFactory;
+import bajtahack.main.LoggingFactory;
 
 
+/**
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
+ *
+ */
 public class BajtaDatasource implements ConnectionFactory {
 	
     public static final Logger log = LoggingFactory.loggerForThisClass();
@@ -44,7 +48,7 @@ public class BajtaDatasource implements ConnectionFactory {
 	@Override
 	public Connection getConnection() throws SQLException {
 		try {
-			// we disable autocommit by default
+			// we disable autocommit by default, and commit as we need
 			final Connection c = dataSource.getConnection();
 			c.setAutoCommit(false);
 			return c;

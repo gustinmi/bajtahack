@@ -1,4 +1,4 @@
-package bajtahack.database;
+package bajtahack.main;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
+ *
+ */
 @WebServlet("/status")
 public class DeviceStatusServlet extends HttpServlet  {
     

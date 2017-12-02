@@ -1,8 +1,17 @@
 package bajtahack.services;
 
-import bajtahack.database.SslClient;
+import java.util.logging.Logger;
+import bajtahack.main.LoggingFactory;
+import bajtahack.main.SslClient;
 
+/**
+ * GPIO interface, sends srm API command to endpoint
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
+ *
+ */
 public class gpio {
+    
+    public static final Logger log = LoggingFactory.loggerForThisClass();
 	
 	SslClient client;
 	

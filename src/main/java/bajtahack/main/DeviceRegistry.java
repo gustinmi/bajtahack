@@ -1,9 +1,13 @@
-package bajtahack.database;
+package bajtahack.main;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
+ *
+ */
 public class DeviceRegistry {
     
     public static final java.util.logging.Logger logger = LoggingFactory.loggerForThisClass();

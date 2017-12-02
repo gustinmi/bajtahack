@@ -7,13 +7,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.logging.Logger;
-import bajtahack.common.Utils;
-import bajtahack.database.LoggingFactory;
-import bajtahack.easysql.SqlQueryParam;
 import net.sf.json.JSONObject;
+import bajtahack.common.Utils;
+import bajtahack.easysql.SqlQueryParam;
+import bajtahack.main.LoggingFactory;
 
 /**
- * @author mitjag
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  *
  */
 public class DatabaseJson {
@@ -22,7 +22,7 @@ public class DatabaseJson {
 	
 	/**
 	 * Kako se preslika JDBC ResultSet v JSON 
-	 * @author mitjag
+	 * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
 	 *
 	 */
 	public static enum JsonRenderType {

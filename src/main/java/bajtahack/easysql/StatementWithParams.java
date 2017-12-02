@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
 
 /** Statement with params wrapper. Used for transactions, where we have to remember
  * several statements (sql + parameters) 
- * @author mitjagustin
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  */
 public final class StatementWithParams {
 	 

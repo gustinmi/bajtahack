@@ -1,8 +1,17 @@
 package bajtahack.services;
 
-import bajtahack.database.SslClient;
+import java.util.logging.Logger;
+import bajtahack.main.LoggingFactory;
+import bajtahack.main.SslClient;
 
+/**
+ * @author <a href="mailto:joze.baligac@gmail.com">Jože Baligač</a>
+ *
+ */
 public class i2c {
+    
+        public static final Logger log = LoggingFactory.loggerForThisClass();
+    
 		String root;
 		SslClient client;
 		

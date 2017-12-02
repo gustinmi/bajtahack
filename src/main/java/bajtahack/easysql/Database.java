@@ -1,19 +1,15 @@
 package bajtahack.easysql;
 
 
-import java.io.IOException;
-import java.io.InputStream;
+import static bajtahack.json.DatabaseJson.*;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import bajtahack.database.LoggingFactory;
+import net.sf.json.JSONObject;
 import bajtahack.json.DatabaseJson;
 import bajtahack.json.DatabaseJson.JsonRenderType;
-import net.sf.json.JSONObject;
-import static bajtahack.json.DatabaseJson.*;
+import bajtahack.main.LoggingFactory;
 
 /**
  * Database subsystem. Works with connection from connection pool running inside application server, or
@@ -22,7 +18,7 @@ import static bajtahack.json.DatabaseJson.*;
  * Contains background worker thread for asynchronous background queries. You dump a query into queue list
  * and workers picks it later on and processes it. 
  * 
- * @author mitjag
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  *
  */
 public class Database {
@@ -105,7 +101,7 @@ public class Database {
 				if(DEBUG_TRACE)log.finest("Query executed in: " + (System.currentTimeMillis() - start) + "ms");
 			}
 		} catch (SQLException e1) {
-			log.severe("MOPED - unable to get connection from pool.");
+			log.severe("unable to get connection from pool.");
 			log.log(Level.SEVERE, "Error db", e1);
 		}
 		
@@ -118,6 +114,11 @@ public class Database {
 		return jsonResp;
 	}
 	
+	/** Obleči rezultate querja v json objekt
+	 * @param query
+	 * @param params
+	 * @return
+	 */
 	public JSONObject getPojo(String query, Map<Integer, SqlQueryParam> params)  {
         final long start = System.currentTimeMillis();
         if (DEBUG_TRACE) log.fine("Executing query: " + query);
@@ -146,13 +147,18 @@ public class Database {
                 if(DEBUG_TRACE)log.finest("Query executed in: " + (System.currentTimeMillis() - start) + "ms");
             }
         } catch (SQLException e1) {
-            log.severe("MOPED - unable to get connection from pool.");
+            log.severe("unable to get connection from pool.");
             log.log(Level.SEVERE, "Error db", e1);
         }   
         if (isError) throw new java.lang.IllegalStateException("Napaka pri delu z bazo. Ne morem nadaljevati!", cause);
         return null;
     }
 	
+	/** pridobi enostaven rezultat
+	 * @param query
+	 * @param params
+	 * @return
+	 */
 	public Object getScalar(String query, Map<Integer, SqlQueryParam> params)  {
     	final long start = System.currentTimeMillis();
     	if (DEBUG_TRACE) log.fine("Executing query: " + query);
@@ -184,7 +190,7 @@ public class Database {
 				if(DEBUG_TRACE)log.finest("Query executed in: " + (System.currentTimeMillis() - start) + "ms");
 			}
 		} catch (SQLException e1) {
-			log.severe("MOPED - unable to get connection from pool.");
+			log.severe("unable to get connection from pool.");
 			log.log(Level.SEVERE, "Error db", e1);
 		}	
 		if (isError) throw new java.lang.IllegalStateException("Napaka pri delu z bazo. Ne morem nadaljevati!", cause);
@@ -224,7 +230,7 @@ public class Database {
                 if(DEBUG_TRACE)log.finest("Query executed in: " + (System.currentTimeMillis() - start) + "ms");
             }
         } catch (SQLException e1) {
-            log.severe("MOPED - unable to get connection from pool.");
+            log.severe("unable to get connection from pool.");
             log.log(Level.SEVERE, "Error db", e1);
         }   
         if (isError) throw new java.lang.IllegalStateException("Napaka pri delu z bazo. Ne morem nadaljevati!", cause);
@@ -353,10 +359,7 @@ public class Database {
         if (DEBUG_TRACE) log.finest("Executing query: " + query);
         try(final Connection connection = this.getConnection())  {
             try{
-                // WARN: oracle ne podpira opcije /*Statement.RETURN_GENERATED_KEYS*/, oz. le ta vrne rowid, in ga moraš naprej queryat.
-                // Če pa mu podaš imena stolpca ki ga vrne insert stavek (ID), potem je vse v redu
-                //String generatedColumns[] = {"ID"};
-                try (final PreparedStatement statement = connection.prepareStatement(query, returnColumns/*Statement.RETURN_GENERATED_KEYS*/)) {
+                try (final PreparedStatement statement = connection.prepareStatement(query, returnColumns)) {
                     if (params != null) setParams(statement, params);
                     if(statement.executeUpdate() > 0){
                         
@@ -399,117 +402,6 @@ public class Database {
 	    return execUpdateQueryReturnInsertId(st.getQuery(), st.getParams(), returnColumns, jsonizedObjectTmpl);
 	}
 	
-	public String saveBlob(String query, String idObjekt, String idLokacija, String fileName, InputStream fileContent, String mimeType, String lokacija, String spremenil, int fileSize) throws SQLException {
-        final long start = System.currentTimeMillis();
-        if (DEBUG_TRACE) log.finest("Executing query: " + query);
-    
-        try(final Connection connection = this.getConnection())  {
-            try{
-                try (final PreparedStatement statement = connection.prepareStatement(query)) {
-                    statement.setString(1, idObjekt );
-                    statement.setString(2, idLokacija);
-                    statement.setString(3, fileName);
-                    statement.setBlob(4, fileContent);
-                    statement.setString(5, mimeType);
-                    statement.setString(6, lokacija);
-                    statement.setString(7, spremenil);
-                    statement.setInt(8, fileSize);
-                    
-                    int executeUpdate = statement.executeUpdate();
-                    connection.commit();
-                    
-                    if (executeUpdate > 0) {
-                        String resp = "Number of inserted files: "+Integer.toString(executeUpdate);
-                        if (DEBUG_TRACE) log.fine(resp);
-                        return resp;
-                    }
-                    log.severe("Executing : "+query);  // members logging
-                }
-            }catch (SQLException e) {
-                
-                log.log(Level.SEVERE, e.toString(), e);
-                throw e;
-            }finally {
-                if(DEBUG_TRACE)log.finest("Query executed in: " + (System.currentTimeMillis() - start) + "ms");
-            }
-        } catch(SQLException ex){
-            log.log(Level.SEVERE, "Napaka pri shranjevanju blob datoteke", ex);
-            throw ex;
-        }         
-        return null;
-    }
-	
-	public void readBlob(String lokacija, String imeDatoteka, String idObjekt, HttpServletResponse response, String mimeType) throws SQLException, IOException{	    
-	    final long start = System.currentTimeMillis();
-        if (DEBUG_TRACE) log.finest("Executing read data: " + imeDatoteka + " lokacija: "+ lokacija+ " idObjekt: " +idObjekt);
-        Blob blob = null;
-        ResultSet rs = null;
-        String fileName="";
-        
-        String query = "SELECT DATOTEKA, IME_DATOTEKA, MIME_TYPE FROM FILES WHERE IME_DATOTEKA = ? AND LOKACIJA = ? AND ID_OBJEKT = ?";
-        final Map<Integer, SqlQueryParam> params = new TreeMap<Integer, SqlQueryParam>();
-        params.put(1, new SqlQueryParam(Types.VARCHAR, imeDatoteka));
-        params.put(2, new SqlQueryParam(Types.VARCHAR, lokacija));
-        params.put(3, new SqlQueryParam(Types.VARCHAR, idObjekt));
-
-        ServletOutputStream out = response.getOutputStream();
-        
-        try(final Connection connection = this.getConnection())  {
-            try{
-                try (final PreparedStatement statement = connection.prepareStatement(query)) {
-                      statement.setString(1, imeDatoteka);
-                      statement.setString(2, lokacija);
-                      statement.setString(3, idObjekt);
-                      rs = statement.executeQuery();
-                      
-                      if(rs.next()) {
-                          blob = rs.getBlob(1);
-                      }
-                      else {
-                          response.setContentType("text/html");
-                          out.println("<html><head><title>Datoteka ne obstaja</title></head>");
-                          out.println("<body><h1>Datoteka: " + imeDatoteka + " ne obstaja.");
-                          out.println("<br>");
-                          out.println("Lokacija: "+ lokacija+ " idObjekt: " +idObjekt+" </h1></body></html>");
-                          return;
-                      }
-                      //get data from database
-                      fileName=rs.getString(2);
-                                           
-                      response.setContentType(mimeType);
-                      
-                      String headerKey = "Content-Disposition";
-                      String headerValue = String.format("attachment; filename=\"%s\"", fileName);
-                      response.setHeader(headerKey, headerValue);
-                      
-                      InputStream in = blob.getBinaryStream();
-                      int length;
-                      Integer fileSize = (int) blob.length();
-                      response.setHeader("Content-Length", fileSize.toString());
-                      
-                      int bufferSize = 1024;
-                      byte[] buffer = new byte[bufferSize];
-                      
-                      while ((length = in.read(buffer)) != -1) {
-                          out.write(buffer, 0, length);
-                      }
-                      
-                      in.close();
-                      out.flush();
-                }
-            } catch(SQLException e){
-                reportError(query, params);
-                log.log(Level.SEVERE, e.getMessage(), e);
-                return;
-            } finally {
-                try {
-                    if(rs!=null)rs.close();
-                } catch (Exception e) {}
-                if(DEBUG_TRACE)log.finest("Query executed in: " + (System.currentTimeMillis() - start) + "ms");
-            }
-        }
-	}
-
     public void executeTransaction(List<StatementWithParams> statements) throws SQLException {
         StatementWithParams currStatement = null;
         final StringBuilder logBuff = new StringBuilder();
@@ -585,12 +477,9 @@ public class Database {
     /* STATIC METHODS - za upravljanje s transakcijo je odgovoren klicatelj */
     
     public static String execUpdateQueryReturnInsertId(final Connection connection, String query, Map<Integer, SqlQueryParam> params, String returnColumns[], String jsonizedObjectTmpl) throws SQLException {
-        final long start = System.currentTimeMillis();//TODO dodaj timeaware log stavek
+        final long start = System.currentTimeMillis();
         if (DEBUG_TRACE) log.finest("Executing query: " + query);
         
-        // WARN: oracle ne podpira opcije /*Statement.RETURN_GENERATED_KEYS*/, oz. le ta vrne rowid, in ga moraš naprej queryat.
-        // Če pa mu podaš imena stolpca ki ga vrne insert stavek (ID), potem je vse v redu
-        //String generatedColumns[] = {"ID"};
         try (final PreparedStatement statement = connection.prepareStatement(query, returnColumns/*Statement.RETURN_GENERATED_KEYS*/)) {
             if (params != null) setParams(statement, params);
             if(statement.executeUpdate() > 0){
@@ -742,94 +631,6 @@ public class Database {
         
     }
 	
-	public String deleteFile(String lokacija, String imeDatoteka, String idObjekt,  String changedBy) throws SQLException {
-        if (DEBUG_TRACE) log.finest("Executing delete file: " + imeDatoteka + " lokacija: "+lokacija+" id objekta: "+idObjekt);
-        
-        String tableName="FILES";
-        String query = "IME_DATOTEKA = '"+imeDatoteka+"' AND LOKACIJA= '"+lokacija+"' AND ID_OBJEKT = '"+idObjekt+"'";
-        
-        int countDeleteRevision =  deleteAndRevision(tableName, query, changedBy);
-        
-        if (countDeleteRevision == 0) {
-            return null;
-        }
-         
-        return displayUpdateCount(countDeleteRevision);
-    }
-
-    public String getFiles(String lokacija, String idObjekt, String idLokacija) throws SQLException {
-        //TODO
-        if (DEBUG_TRACE) log.finest("Pridobi podatke o : ");
-        
-        Map<Integer, SqlQueryParam> params = new TreeMap<Integer, SqlQueryParam>();
-        params.put(1, new SqlQueryParam(Types.VARCHAR, lokacija));
-        params.put(2, new SqlQueryParam(Types.VARCHAR, idObjekt));
-
-        String query;
-        //V PRIMERU, DA NI PODAN ID_LOKACIJE SE IZ BAZE POBERE VREDNOSTI, KI IMAJO ID_LOKACIJA IS NULL ?
-       if(idLokacija=="0")
-            query = "SELECT IME_DATOTEKA, FILE_SIZE FROM FILES WHERE LOKACIJA = ? AND ID_OBJEKT = ? AND ID_LOKACIJA = 0";
-        else {    
-            query = "SELECT IME_DATOTEKA, FILE_SIZE FROM FILES WHERE LOKACIJA = ? AND ID_OBJEKT = ? AND ID_LOKACIJA=?";    
-            params.put(3, new SqlQueryParam(Types.VARCHAR, idLokacija));
-        }
-
-        final StringBuilder jsonResponse =getJson(query, params, 100, JsonRenderType.ARRAY_WITHOUT_LAYOUT, 0, null, true, null, true);
-        return jsonResponse.toString();
-    }
-    
-    /**
-     * metoda, ki izbriše podatke in le te zapiše v revizijsko tabelo.
-     * za vse skupaj poskrbi bazna procedura DELETE_ROWS_P
-     * @param connection
-     * @param tableName (procedura na podlagi tega parametra pridobi vse podatke o vseh imenih vrstci, ki jih je potrebno zapisati v revizijsko tabelo
-     * @param query (na podlagi query procedura zgradi delete stavke. Vso kodo za izbris pred WHERE stavkom zgradi procedura)
-     * @param changedBy
-     * @return število izbrisanih zapisov
-     * @throws SQLException
-     */
-    public static int deleteAndRevisionConnection(final Connection connection, String tableName, String query, String changedBy) throws SQLException {
-        CallableStatement callableStatement;
-        String deleteRows = "{call DELETE_ROWS_P(?,?,?,?)}";
-        callableStatement = connection.prepareCall(deleteRows);
-        callableStatement.setString(1, tableName);
-        callableStatement.setString(2, " "+query+" ");
-        callableStatement.setString(3, changedBy);
-        callableStatement.registerOutParameter(4, java.sql.Types.INTEGER);
-        
-        callableStatement.executeUpdate();
-        
-        int countDeleteRevision = callableStatement.getInt(4);
-        return countDeleteRevision; 
-    }
-    
-    public int deleteAndRevision(String tableName, String query, String changedBy) throws SQLException{
-        final long start = System.currentTimeMillis();
-        if(DEBUG_TRACE) log.fine("Executing query: " + query);
-        int countDeleteRevision=0;
-        
-        try(final Connection connection = this.getConnection())  {
-            try {
-                  CallableStatement callableStatement;
-                  String deleteRows = "{call DELETE_ROWS_P(?,?,?,?)}";
-                  callableStatement = connection.prepareCall(deleteRows);
-                  callableStatement.setString(1, tableName);
-                  callableStatement.setString(2, " "+query+" ");
-                  callableStatement.setString(3, changedBy);
-                  callableStatement.registerOutParameter(4, java.sql.Types.INTEGER);
-                  callableStatement.executeUpdate();
-                  countDeleteRevision = callableStatement.getInt(4);
-                  connection.commit();
-             }
-             catch(SQLException ex){
-                log.log(Level.SEVERE, "SQL napaka", ex);
-                connection.rollback();
-                return 0;
-            } finally {
-                if(DEBUG_TRACE)log.finest("Query executed in: " + (System.currentTimeMillis() - start) + "ms");
-            }
-       }
-      
-       return countDeleteRevision;
-   }
+	    
+  
 }

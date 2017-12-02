@@ -24,14 +24,9 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
-                        <manifestEntries>
-                            <Moped-Environment-Type>${moped.environment}</Moped-Environment-Type>
-                            <Svn-Revision-Number>${buildNumber}</Svn-Revision-Number>
-                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 

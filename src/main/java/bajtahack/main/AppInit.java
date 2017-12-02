@@ -1,28 +1,24 @@
-package bajtahack.database;
+package bajtahack.main;
 
-
-import java.io.FileNotFoundException;
+import static bajtahack.common.ConditionalCompilationFlags.*;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-
-import bajtahack.common.Global;
 import bajtahack.easysql.BajtaDatasource;
 import bajtahack.easysql.Database;
 import bajtahack.services.gpio;
-import bajtahack.speech.BayesClassifier;
+import bajtahack.speech.BayesClassifierBajta;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
+/**
+ * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
+ *
+ */
 @WebListener
-public class AppInit implements HttpSessionListener, ServletContextListener {
+public class AppInit implements ServletContextListener {
     
     public static final Logger log = LoggingFactory.loggerForThisClass();
     
@@ -31,36 +27,29 @@ public class AppInit implements HttpSessionListener, ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent ctx) {
         
+        // inicializacija resource poola
         Database.instance.setConnectionFactory(new BajtaDatasource("java:jboss/datasources/bajtahack"));
         
         try {
+            
+            // inicializacija ssl klijenta
             httpClient = new SslClient("/bajtahack.jks", "p");
         
-            GoogleCredential credential = GoogleCredential.getApplicationDefault();
+            // google speach inicializaija
+            if (USE_GOOGLE_SPEACH) {
+                GoogleCredential credential = GoogleCredential.getApplicationDefault();
+                BayesClassifierBajta.train();    
+            } 
             
+            // incializacija srm module konektorja
             gpio.instance.configure(httpClient);
             
-            BayesClassifier.Train();
-            
-        } catch (IllegalStateException | FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        } catch (IllegalStateException | IOException e) {
+            log.log(Level.SEVERE, "Usodna napaka : " + e.getMessage(), e);
+        } 
             
     }
-    
-    @Override
-    public void sessionCreated(HttpSessionEvent arg0) {
-        
-    }
-
-    @Override
-    public void sessionDestroyed(HttpSessionEvent arg0) {
-       
-    }
-
+  
     @Override
     public void contextDestroyed(ServletContextEvent arg0) {
     
