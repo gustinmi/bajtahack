@@ -26,10 +26,6 @@ public final class Utils {
         return nvl(s, "");
     }
     
-    public static boolean isNullOrEmpty(Object s) {
-        return nvl(s, "").length() < 1 ? true : false;
-    }
-
     // Stream utils
     
     public static byte[] fileToStream(File f) {

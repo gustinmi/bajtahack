@@ -84,6 +84,7 @@ public class Device {
     }
     
 
+    @SuppressWarnings("rawtypes")
     public String getSuportedDevices() {
         final StringBuilder sb = new StringBuilder("[");
         

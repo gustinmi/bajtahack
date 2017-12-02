@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
+/** Receives notify event when orangepi devices comes online
  * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  *
  */
@@ -35,20 +35,11 @@ public class InstallServlet extends HttpServlet  {
         try {
             
             final Date date = new Date();
-            //logger.info(dateFormat.format(date)); //2016/11/16 12:08:43
             
             final String ip = request.getParameter("name");
             final Device d = new Device(ip, date);
             
             DeviceRegistry.instance.addDevice(d);
-            
-            //logger.info("Api called for device " + d.getIp());
-            
-            //response.setContentType("text/plain");
-            //response.getOutputStream().print("hello from " + ip); 
-            //response.getOutputStream().flush();
-            
-            // PoolDatabase.instance.get();
             
             return;
         }

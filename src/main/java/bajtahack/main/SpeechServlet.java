@@ -1,6 +1,7 @@
 package bajtahack.main;
 
 import java.io.*;
+import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +12,7 @@ import bajtahack.services.gpio2;
 import bajtahack.speech.BayesClassifierBajta;
 import bajtahack.speech.SpeechRecognition;
 
-/**
+/** Google SpeachAPI connector
  * @author <a href="mailto:joze.baligac@gmail.com">Jože Baligač</a>
  *
  */
@@ -37,6 +38,7 @@ public class SpeechServlet extends HttpServlet {
     	File temp;
         try
         {
+            // temorarly save input to file
            temp = File.createTempFile("audioTmp", ".flac");
     	
 	    	//začasno shranimo na disk
@@ -49,17 +51,6 @@ public class SpeechServlet extends HttpServlet {
 	        }
 	        os.flush();
 	        os.close();
-	    	
-	    	/*ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-	    	
-	    	int nRead;
-	    	byte[] data = new byte[1024 * 1024];
-	
-	    	while ((nRead = input.read(data, 0, data.length)) != -1) {
-	    	  buffer.write(data, 0, nRead);
-	    	}
-	
-	    	buffer.flush();*/
 	
 	    	String result = SpeechRecognition.Recognize2(temp.getAbsolutePath());
 	    	
@@ -97,11 +88,11 @@ public class SpeechServlet extends HttpServlet {
 	    		}   		
 	    	}	    	
 	    	
-	    	System.out.println(result);
+	    	logger.info(result);
 	    	
         }
-        catch(Exception ex){
-        	System.out.println(ex.getMessage());
+        catch(Exception e){
+            logger.log(Level.SEVERE, e.toString(), e);
         }
 
     	response.setContentType("text/plain");
@@ -112,12 +103,12 @@ public class SpeechServlet extends HttpServlet {
     
     @Override
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	throw new NotImplementedException();
+    	throw new NotImplementedException("Ta metoda ni podprta");
     }
     
     @Override
     public void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    	throw new NotImplementedException();
+        throw new NotImplementedException("Ta metoda ni podprta");
     }
 	
 	

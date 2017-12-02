@@ -1,16 +1,21 @@
 package bajtahack;
 
 import java.io.FileNotFoundException;
+import java.util.logging.Logger;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import bajtahack.main.LoggingFactory;
 import bajtahack.main.SslClient;
 
-/**
+/** Calls srmModule RESTful api
  * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
- *
+ * @author <a href="mailto:joze.baligac@gmail.com">Jože Baligač</a>
+ * @author <a href="mailto:matic.tempfer@gmail.com">Matic Tempfer</a>
  */
 public class OrangePiTester {
+    
+    public static final Logger log = LoggingFactory.loggerForThisClass();
     
     private SslClient client;
     

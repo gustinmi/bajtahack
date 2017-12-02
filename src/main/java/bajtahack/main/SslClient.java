@@ -11,10 +11,11 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import javax.net.ssl.*;
+import bajtahack.main.SslClient.SSLUtilities;
 
 /**
- * POJO Ssl client surpasses java restrictions due to host name and CA not trusted. 
- * It load's our own trustore (or keystore)
+ * POJO SSL Java client surpasses java restrictions due to host name and CA not trusted. 
+ * It load's our own keystore and set's it as truststore and keystore at the same time
  * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  *
  */
@@ -27,24 +28,32 @@ public class SslClient {
     private KeyStore keyStore;
     private SSLSocketFactory socketFactory;
     
+    /**
+     * If set to true, any attempt to read file from given path will be attempted.
+     * If set to false, the file will be read from root of WAR file
+     * Use false when running from server. Use true if running from junit for example or commandline. 
+     */
     public static final boolean IS_FILE = false;
     
     public SslClient(String jksPath, String jksPassword) throws IllegalStateException, FileNotFoundException {
- 
-		//logger.info(String.format("Initializing SSL client %s", jksPath));
     	
        this.certificatePassword = jksPassword;
-       
-       //logger.info("Keystore path is: " + jksPath);
+
        keyStore = createKeyStore(jksPath);
        socketFactory = createSocketFactory();
-       //logger.info("Keystore je:" + keyStore);
        
        SSLUtilities.trustAllHostnames();
        SSLUtilities.trustAllHttpsCertificates();
   
     }
     
+    /** Execute HTTP POST, PUT or DELETE request with payload 
+     * @param url
+     * @param contentType
+     * @param payload
+     * @param method
+     * @return
+     */
     public String payload(String url, String contentType, String payload, String method){
         final StringBuilder outputString = new StringBuilder();
         
@@ -73,7 +82,7 @@ public class SslClient {
             return "";
         }
 
-        //Write the SOAP message response to a String.
+        //Write the message response to a String.
         
         try(final InputStreamReader isr = new InputStreamReader(connection.getInputStream());
             final BufferedReader in = new BufferedReader(isr)){;
@@ -91,7 +100,7 @@ public class SslClient {
     }
     
     /**
-     * Create a http get request 
+     * Create a HTTP GET request 
      */
     public String get(String urlStr)  {
         logger.info("server je:" + urlStr);
@@ -112,9 +121,9 @@ public class SslClient {
             String encoding = connection.getContentEncoding();
             if (null == encoding) encoding = "UTF-8";
             Charset charset = Charset.forName(encoding);
-            InputStreamReader reader = new InputStreamReader(connection.getInputStream(), charset);
+            final InputStreamReader reader = new InputStreamReader(connection.getInputStream(), charset);
             char[] buffer = new char[1024];
-            StringBuilder response = new StringBuilder();
+            final StringBuilder response = new StringBuilder();
             int i;
             while ((i = reader.read(buffer, 0, 1024)) >= 0) {
                 response.append(buffer, 0, i);
@@ -123,7 +132,7 @@ public class SslClient {
             return response.toString();
         }
         catch (Exception e) {
-           e.printStackTrace();
+            logger.log(Level.SEVERE, e.toString(), e);
         }
         return "\"hits\":0,";
         //return null;
@@ -189,7 +198,7 @@ public class SslClient {
             return c.getSocketFactory();
         }
         catch (GeneralSecurityException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.toString(), e);
         }
         return null;
     }
@@ -216,7 +225,7 @@ public class SslClient {
             return connection;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.toString(), e);
         }
         return null;
     }

@@ -3,7 +3,7 @@ package bajtahack.easysql;
 /**
  * Holder for prepared statement parameter. You must specify type and value.
  * Later on, database code iterates through collection of this parameters and inserts them into
- * statement's sql.
+ * statement's sql, using type for auto coersion.
  * 
  * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  *

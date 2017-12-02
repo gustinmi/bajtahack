@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +23,10 @@ public class DeviceStatusServlet extends HttpServlet  {
     public static final java.util.logging.Logger logger = LoggingFactory.loggerForThisClass();
     
     
+    /** 
+     * Debuging method. print'a all connected devices
+     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { // for debugging
         
@@ -66,16 +71,18 @@ public class DeviceStatusServlet extends HttpServlet  {
             response.getOutputStream().print(String.format(template, table.toString())); 
             response.getOutputStream().flush();
             
-            // PoolDatabase.instance.get();
-            
             return;
         }
-        catch (Exception problem) {
-            problem.printStackTrace();
+        catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString(), e);
         }
         
     }
     
+    /** 
+     * Get all srmModules with all configured gpio's  as json
+     * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     */
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException, ServletException {
         

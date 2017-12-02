@@ -7,12 +7,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.NotImplementedException;
 import bajtahack.json.JsonUtils;
 import bajtahack.main.Device.DeviceType;
 import bajtahack.services.gpio;
 
 
 /**
+ * Executes srm RESTApi command against device.
+ * Currently only lights are supported.
  * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  *
  */
@@ -54,18 +57,12 @@ public class ExecuteServlet extends HttpServlet  {
        
                 break;
             }
+            
+            default:
+                throw new NotImplementedException("Only light are supported for now");
        
         }     
-        
-        
-        
-        //final DeviceState st = DeviceState.fromNotify(serviceId, type, rslt.toString());
-        //st.setDevice(deviceId);
-        
-        //Device device = DeviceRegistry.instance.getDevice(deviceId);
-        //if (device != null)
-        //    device.addState(st);
-        
+    
     }
     
     @Override

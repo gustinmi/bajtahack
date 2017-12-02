@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
+/** Used for srmmodule notify calls
  * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  *
  */
@@ -49,7 +49,7 @@ public class NotifyServlet extends HttpServlet  {
         final DeviceState st = DeviceState.fromNotify(serviceId, type, rslt.toString());
         st.setDevice(deviceId);
         
-        Device device = DeviceRegistry.instance.getDevice(deviceId);
+        final Device device = DeviceRegistry.instance.getDevice(deviceId);
         if (device != null)
             device.addState(st);
         

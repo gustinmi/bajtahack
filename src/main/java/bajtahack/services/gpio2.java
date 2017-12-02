@@ -2,7 +2,7 @@ package bajtahack.services;
 
 import bajtahack.main.SslClient;
 
-/**
+/** GPIO interface, sends srm API command to endpoint
  * @author <a href="mailto:joze.baligac@gmail.com">Jože Baligač</a>
  *
  */

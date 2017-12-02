@@ -7,7 +7,8 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
 
 /** Statement with params wrapper. Used for transactions, where we have to remember
- * several statements (sql + parameters) 
+ * several statements (sql + parameters). Also used to transfer queries between methods and for
+ * minimal domain modeling. 
  * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  */
 public final class StatementWithParams {

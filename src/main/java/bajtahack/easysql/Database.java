@@ -1,22 +1,18 @@
 package bajtahack.easysql;
 
 
-import static bajtahack.json.DatabaseJson.*;
+import static bajtahack.easysql.DatabaseCoerser.*;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sf.json.JSONObject;
-import bajtahack.json.DatabaseJson;
-import bajtahack.json.DatabaseJson.JsonRenderType;
+import bajtahack.easysql.DatabaseCoerser.JsonRenderType;
 import bajtahack.main.LoggingFactory;
 
 /**
  * Database subsystem. Works with connection from connection pool running inside application server, or
  * establishes its own connections via JDBC DriverManager. 
- * 
- * Contains background worker thread for asynchronous background queries. You dump a query into queue list
- * and workers picks it later on and processes it. 
  * 
  * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
  *
@@ -85,7 +81,7 @@ public class Database {
 		            
 		            boolean isRS = statement.execute();
 		            
-		            displayResults(jsonResp, statement, isRS, params, rType, echoNum, limitCellLength, countSql, dateTimeOnly);
+		            displayResults(jsonResp, statement, isRS, params, rType, echoNum, limitCellLength);
 		            
 		            if(VERBOSE_TRACE)log.finest(jsonResp.toString()); // json response logging
 				}
@@ -133,7 +129,7 @@ public class Database {
                     boolean isRS = statement.execute();
                     if (isRS){
                         ResultSet rs = statement.getResultSet();
-                        return DatabaseJson.getPojo(rs);
+                        return DatabaseCoerser.getPojo(rs);
                     }
                 }
             } catch (SQLException e) {

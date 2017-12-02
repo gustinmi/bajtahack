@@ -4,9 +4,10 @@ import java.util.logging.Logger;
 import bajtahack.main.LoggingFactory;
 import bajtahack.main.SslClient;
 
-/**
+/** Interface to I2C, sends srm API command to endpoint
+ * 
  * @author <a href="mailto:joze.baligac@gmail.com">Jože Baligač</a>
- *
+ * @author <a href="mailto:matic.tempfer@gmail.com">Matic Tempfer</a>
  */
 public class i2c {
     
@@ -28,9 +29,6 @@ public class i2c {
 			makeRequest = makeRequest.substring(1, makeRequest.length() - 1);
 			Integer temp = Integer.parseInt(makeRequest, 16);
 			float tempR = (((float)temp / 65535) * 165) - 40;
-	 
-			//System.out.println(tempR);
-			
 			return tempR;
 		}
 		
@@ -41,17 +39,8 @@ public class i2c {
 			makeRequest = makeRequest.substring(1, makeRequest.length() - 1);
 			Integer temp = Integer.parseInt(makeRequest, 16);
 			float tempR = (((float)temp / 65535) * 165) - 40;
-	 
-			//System.out.println(tempR);
-			
 			return tempR;
-			
 		}
-		
-		
-		
-		
-		
 		
 		
 }

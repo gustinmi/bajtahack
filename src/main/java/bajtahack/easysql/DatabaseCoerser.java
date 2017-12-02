@@ -1,4 +1,4 @@
-package bajtahack.json;
+package bajtahack.easysql;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -9,14 +9,14 @@ import java.util.Map;
 import java.util.logging.Logger;
 import net.sf.json.JSONObject;
 import bajtahack.common.Utils;
-import bajtahack.easysql.SqlQueryParam;
+import bajtahack.json.JsonUtils;
 import bajtahack.main.LoggingFactory;
 
-/**
+/** Correct type is coersed when binding java values to sql types or when retrieving db values into java.
+ * This auto coersion greatly simplifies wotk with JDBC
  * @author <a href="mailto:gustinmi@gmail.com">Mitja Guštin</a>
- *
  */
-public class DatabaseJson {
+public class DatabaseCoerser {
 	
 	private static final int MAX_CELL_LENGTH = 150;
 	
@@ -26,18 +26,11 @@ public class DatabaseJson {
 	 *
 	 */
 	public static enum JsonRenderType {
-	    /**
-	     * Posebni format ki ga pričakuje datatable.
-	     */
-	    DATATABLE,
+	    
 		/**
 		 * Primeren za rezultate v tabelarni obliki. Rezultati vsebujejo layout (ime fielda iz baze, ime fielda v rezultatih) in podatke, ki so mapirani glede na layout.  
 		 */
 		ARRAY,
-		/**
-		 * Najbolj naraven tip.  Primeren za rezultate v tabelarni obliki. Vrne array objektov, kjer je IME_DB_STOLPCA : VREDNOST
-		 */
-		ARRAY_ASOCIATIVE,
 		/**
 		 * Enovrstična tabelarna oblika. Primeren za querje, kjer se vrne vrednost več stolpcev za ENO ! vrstico
 		 */
@@ -111,7 +104,7 @@ public class DatabaseJson {
 		
 	}
     
-	/** Gets styped value from string
+	/** Gets typed value from string
 	 * @param type you want to output {@link java.sql.Types} 
 	 * @param s plain string value
 	 * @return object that you cast later
@@ -281,12 +274,8 @@ public class DatabaseJson {
             int ndx = entry.getKey();
             SqlQueryParam param = entry.getValue();
             int type = param.getDbType();
-            //if (DEBUG_TRACE) log.fine(param.toString());
             Object value = strToDbValue(type, param.getDbVal());
-            //if(value != null)
-                stmt.setObject(ndx, value);
-            //else
-            //    stmt.setNull(ndx, type);
+            stmt.setObject(ndx, value);
         }
     }
 	
@@ -298,11 +287,9 @@ public class DatabaseJson {
 	 * @param params
 	 * @param rType selectes specific render type
 	 * @param echoNum Expected by the DataTables rendered
-	 * @param countSql TODO
-	 * @param dateTimeOnly TODO
 	 * @throws SQLException
 	 */
-	public static void displayResults(StringBuilder pw, Statement stmt, boolean isRS, Map<Integer, SqlQueryParam> params, JsonRenderType rType, int echoNum, boolean limitCellLength, String countSql, boolean dateTimeOnly) throws SQLException {
+	public static void displayResults(StringBuilder pw, Statement stmt, boolean isRS, Map<Integer, SqlQueryParam> params, JsonRenderType rType, int echoNum, boolean limitCellLength) throws SQLException {
 		if (isRS) {
 			ResultSet rs = stmt.getResultSet();
 	
